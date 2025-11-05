@@ -1,0 +1,7 @@
+datasets:
+  - name: orp_marine_plastics
+    source: Ocean Research Project
+    description: "Marine plastics sample data collected from global expeditions."
+    file_type: csv
+    access: private
+    license: pending_partner_review

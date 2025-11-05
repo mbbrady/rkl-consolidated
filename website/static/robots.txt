@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# This site is for internal board review only
+# Not for public indexing

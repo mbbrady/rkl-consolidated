@@ -1,0 +1,263 @@
+/* RKL Custom Styles - Professional Nonprofit Design */
+/* Implementing GPT-5 design recommendations */
+
+:root {
+  --rkl-navy: #0a2342;
+  --rkl-coral: #ff8b7b;
+  --rkl-bg: #f9f9fb;
+  --rkl-white: #ffffff;
+  --rkl-text: #2f2f41;
+  --rkl-spacing: 3rem;
+}
+
+/* Force color overrides - Navy dominant, Coral accent */
+body {
+  color: var(--rkl-navy) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--rkl-navy) !important;
+}
+
+/* Header/Logo should be navy, not coral */
+.header .logo a,
+.header .logo a strong,
+.header-mobile .logo-mobile a,
+.header-mobile .logo-mobile a strong {
+  color: var(--rkl-navy) !important;
+}
+
+/* Menu items in navy */
+.main-menu a {
+  color: var(--rkl-navy) !important;
+}
+
+.main-menu a:hover {
+  color: var(--rkl-coral) !important;
+}
+
+/* Service titles in navy, not coral */
+.service .service-title,
+.service .service-title a {
+  color: var(--rkl-navy) !important;
+}
+
+/* Links - coral accent but more subtle */
+a {
+  color: var(--rkl-coral) !important;
+}
+
+a:hover {
+  color: var(--rkl-navy) !important;
+}
+
+/* Buttons - coral background */
+.button, .btn, .button-primary {
+  background-color: var(--rkl-coral) !important;
+  border-color: var(--rkl-coral) !important;
+  color: white !important;
+}
+
+.button:hover, .btn:hover, .button-primary:hover {
+  background-color: var(--rkl-navy) !important;
+  border-color: var(--rkl-navy) !important;
+}
+
+/* Hero Section Enhancement */
+.intro {
+  background: radial-gradient(circle at center, var(--rkl-bg) 0%, var(--rkl-white) 100%);
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  padding: var(--rkl-spacing) 0;
+}
+
+.intro h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  font-weight: 600;
+  color: var(--rkl-navy);
+  margin-bottom: 1.5rem;
+}
+
+.intro p {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--rkl-text);
+  max-width: 600px;
+}
+
+/* Service Cards Enhancement */
+.strip {
+  background-color: var(--rkl-white);
+  padding: 4rem 0;
+}
+
+.service {
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  padding: 2rem;
+  height: 100%;
+  background: var(--rkl-white);
+  border: 1px solid #e8e8eb;
+}
+
+.service:hover {
+  box-shadow: 0 8px 24px rgba(10, 35, 66, 0.12);
+  transform: translateY(-4px);
+  border-color: var(--rkl-coral);
+}
+
+.service-title a {
+  color: var(--rkl-navy);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1.25rem;
+}
+
+.service-title a:hover {
+  color: var(--rkl-coral);
+}
+
+.service-content p {
+  color: var(--rkl-text);
+  line-height: 1.7;
+}
+
+/* Improved Spacing */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Header Enhancement */
+.header {
+  background-color: var(--rkl-white);
+  border-bottom: 1px solid #e8e8eb;
+  padding: 1.25rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.logo a {
+  color: var(--rkl-navy);
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.logo a:hover {
+  color: var(--rkl-coral);
+}
+
+/* Links */
+a {
+  color: var(--rkl-coral);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Main Menu */
+.main-menu a {
+  color: var(--rkl-navy);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.main-menu a:hover {
+  color: var(--rkl-coral);
+}
+
+/* Footer Enhancement */
+.footer {
+  background-color: var(--rkl-navy);
+  color: var(--rkl-white);
+  padding: 3rem 0;
+  margin-top: 4rem;
+}
+
+.footer a {
+  color: var(--rkl-coral);
+}
+
+/* Button Styles */
+.button {
+  background-color: var(--rkl-coral);
+  color: var(--rkl-white);
+  padding: 0.875rem 2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.button:hover {
+  background-color: #ff6f5c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 139, 123, 0.3);
+  text-decoration: none;
+}
+
+/* Typography Improvements */
+body {
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--rkl-text);
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+  color: var(--rkl-navy);
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+/* Contact Box (if enabled) */
+.call {
+  background-color: var(--rkl-bg);
+  border-radius: 8px;
+  padding: 2rem;
+  border-left: 4px solid var(--rkl-coral);
+}
+
+.call h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Responsive Improvements */
+@media (max-width: 768px) {
+  .intro h1 {
+    font-size: 2rem;
+  }
+
+  .intro {
+    min-height: 50vh;
+  }
+
+  .container {
+    padding: 0 1.5rem;
+  }
+
+  .service {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Accessibility */
+*:focus {
+  outline: 2px solid var(--rkl-coral);
+  outline-offset: 2px;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}

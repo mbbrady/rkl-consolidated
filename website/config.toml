@@ -1,0 +1,67 @@
+baseURL = "https://resonantknowledgelab.org/"
+languageCode = "en-us"
+title = "Resonant Knowledge Lab"
+theme = "serif"
+copyright = "© 2025 Resonant Knowledge Lab"
+enableRobotsTXT = true
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[params]
+  google_analytics_id = ""
+  favicon = "favicon-32x32.svg"
+
+  [params.logo]
+    mobile = "images/logo.png"
+    mobile_height = "40px"
+    mobile_width = "auto"
+    desktop = "images/logo.png"
+    desktop_height = "50px"
+    desktop_width = "auto"
+    alt = "Resonant Knowledge Lab"
+
+  [params.homepage]
+    sticky_header = true
+    show_contact_box = false
+    show_services_button = true
+
+  [params.fonts]
+    google_fonts = 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Source+Sans+Pro:wght@400;700&display=swap'
+    heading = "Playfair Display"
+    base = "Source Sans Pro"
+
+  [params.colors]
+    primary = "#ff8b7b"
+    black = "#0a2342"
+    white = "#ffffff"
+    white_offset = "#f9f9fb"
+    grey = "#5C5A5A"
+
+  [params.footer]
+    copyright_text = '© 2025 Resonant Knowledge Lab'
+
+[menu]
+  [[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = 1
+  [[menu.main]]
+    name = "Focus Areas"
+    url = "/programs/"
+    weight = 2
+  [[menu.main]]
+    name = "Methods"
+    url = "/methods/"
+    weight = 3
+  [[menu.main]]
+    name = "Wiki"
+    url = "/wiki/"
+    weight = 4
+  [[menu.main]]
+    name = "Team"
+    url = "/team/"
+    weight = 5
+

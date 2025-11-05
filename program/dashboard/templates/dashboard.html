@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RKL Dashboard - Resonant Knowledge Lab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🔬 Resonant Knowledge Lab</h1>
+            <p class="tagline">Ethical AI for Living Knowledge</p>
+            <div class="header-stats">
+                <div class="stat">
+                    <span class="stat-value">{{ summary.percentage }}%</span>
+                    <span class="stat-label">Complete</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value status-done">{{ summary.done }}</span>
+                    <span class="stat-label">Done</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value status-progress">{{ summary.in_progress }}</span>
+                    <span class="stat-label">In Progress</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value status-todo">{{ summary.todo }}</span>
+                    <span class="stat-label">To Do</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Quick Actions Bar -->
+        <div class="quick-actions">
+            <h2>⚡ Quick Actions</h2>
+            <div class="action-buttons">
+                <button onclick="quickAction('preview_website')" class="btn btn-primary">
+                    🌐 Preview Website
+                </button>
+                <button onclick="quickAction('assemble_packet')" class="btn btn-secondary">
+                    📦 Assemble Meeting Packet
+                </button>
+                <button onclick="quickAction('open_folder')" class="btn btn-secondary">
+                    📁 Open Meeting Folder
+                </button>
+                <button onclick="window.open('/api/status', '_blank')" class="btn btn-secondary">
+                    🔄 Refresh Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid">
+            <!-- Critical Next Steps -->
+            <div class="card">
+                <h2>🚨 Critical Next Steps</h2>
+                <div class="critical-steps">
+                    {% for step in critical_steps %}
+                    <div class="step status-{{ step.status }}">
+                        <div class="step-marker">{{ loop.index }}</div>
+                        <div class="step-content">
+                            <div class="step-task">{{ step.task }}</div>
+                            {% if step.note %}
+                            <div class="step-note">{{ step.note }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Meeting Packet Status -->
+            <div class="card">
+                <h2>📋 Meeting Packet Status</h2>
+                {% if meeting_status.status == 'ok' %}
+                <div class="packet-summary">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ meeting_status.percentage }}%"></div>
+                    </div>
+                    <p class="packet-stats">
+                        <strong>{{ meeting_status.ready }}/{{ meeting_status.total }}</strong> documents ready
+                        ({{ meeting_status.percentage }}%)
+                    </p>
+                </div>
+                <div class="document-list">
+                    {% for doc in meeting_status.documents %}
+                    <div class="document-item status-{{ doc.status }}">
+                        <span class="doc-icon">{% if doc.status == 'ready' %}✅{% else %}🔴{% endif %}</span>
+                        <span class="doc-name">{{ doc.name }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button onclick="refreshPacket()" class="btn btn-small btn-secondary" style="margin-top: 1rem;">
+                    🔄 Refresh Status
+                </button>
+                {% else %}
+                <p class="error">{{ meeting_status.message }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Tasks by Category -->
+        <div class="card">
+            <h2>📊 All Tasks by Category</h2>
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterTasks('all')">All</button>
+                <button class="filter-btn" onclick="filterTasks('todo')">🔴 To Do</button>
+                <button class="filter-btn" onclick="filterTasks('in_progress')">🟡 In Progress</button>
+                <button class="filter-btn" onclick="filterTasks('done')">🟢 Done</button>
+            </div>
+
+            <div class="tasks-container">
+                {% set current_section = '' %}
+                {% for task in tasks %}
+                    {% if task.section != current_section %}
+                        {% set current_section = task.section %}
+                        <h3 class="section-header">{{ task.section }}</h3>
+                    {% endif %}
+                    <div class="task-item status-{{ task.status }}" data-status="{{ task.status }}">
+                        <div class="task-checkbox">
+                            <input type="checkbox" {% if task.status == 'done' %}checked{% endif %} disabled>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-name">{{ task.name }}</div>
+                            {% if task.notes %}
+                            <div class="task-notes">{{ task.notes }}</div>
+                            {% endif %}
+                            {% if task.location %}
+                            <div class="task-location">
+                                <a href="/open_file/{{ task.location }}" class="file-link">📁 {{ task.location }}</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Recent Files -->
+        <div class="card">
+            <h2>📄 Recently Modified Files</h2>
+            <div class="file-list">
+                {% for file in recent_files %}
+                <div class="file-item">
+                    <div class="file-icon">📄</div>
+                    <div class="file-info">
+                        <div class="file-name">{{ file.name }}</div>
+                        <div class="file-meta">
+                            {{ file.path }} • {{ file.modified.strftime('%Y-%m-%d %H:%M') }}
+                        </div>
+                    </div>
+                    <a href="/open_file/{{ file.path }}" class="btn btn-tiny">Open</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>RKL Dashboard • Resonant Knowledge Lab • Virginia 501(c)(3) in formation</p>
+            <p>Mission: To make human knowledge discoverable, accessible, and securely interoperable with AI</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

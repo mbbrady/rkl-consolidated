@@ -1,0 +1,16 @@
+name: rkl_orp
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - jupyterlab
+  - pandas
+  - geopandas
+  - leafmap
+  - langchain
+  - openai
+  - requests
+  - fastapi
+  - uvicorn
+  - pyyaml
+  - matplotlib

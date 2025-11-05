@@ -1,0 +1,22 @@
+{{ if .Site.Params.homepage.sticky_header}}
+<div class='header' id="stickyHeader">
+{{ else }}
+<div class='header' >
+{{ end }}
+  <div class="container">
+    <div class="logo">
+      <a href="/" class="logo-link">
+        <img src="/images/logo.png" alt="Resonant Knowledge Lab" height="50" width="50" style="height: 50px; width: 50px;">
+        <span class="site-title">Resonant Knowledge Lab</span>
+      </a>
+    </div>
+    <div class="logo-mobile">
+      <a href="/" class="logo-link">
+        <img src="/images/logo.png" alt="Resonant Knowledge Lab" height="40" width="40" style="height: 40px; width: 40px;">
+        <span class="site-title">Resonant Knowledge Lab</span>
+      </a>
+    </div>
+    {{ partial "main-menu.html" . }}
+    {{ partial "hamburger.html" . }}
+  </div>
+</div>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPress Integration Test - ORP Story Map Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Demo banner */
+        .demo-banner {
+            background: #ff9800;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 3px solid #f57c00;
+        }
+
+        .demo-banner h2 {
+            margin: 0 0 5px 0;
+            font-size: 1.3em;
+        }
+
+        .demo-banner p {
+            margin: 0;
+            font-size: 0.95em;
+            font-weight: normal;
+        }
+
+        /* Header styling similar to ORP site */
+        header {
+            background: #0066cc;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        nav {
+            background: #004d99;
+            padding: 10px 0;
+        }
+
+        nav ul {
+            list-style: none;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-title {
+            color: #0066cc;
+            margin: 30px 0 20px 0;
+            font-size: 2.5em;
+        }
+
+        .intro {
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        .iframe-container {
+            width: 100%;
+            margin: 40px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+
+        .note-box {
+            background: #e7f3ff;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- DEMO BANNER - Makes it clear this is not a real page -->
+    <div class="demo-banner">
+        <h2>🧪 WORDPRESS INTEGRATION TEST / PREVIEW</h2>
+        <p>This is NOT a real webpage. This HTML file demonstrates how the story map would look embedded in a WordPress page. Use this to preview the integration before implementing on your actual website.</p>
+    </div>
+
+    <!-- Header similar to ORP -->
+    <header>
+        <h1>Ocean Research Project</h1>
+        <p>Advancing ocean health through research and education</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Programs</a></li>
+            <li><a href="#">Science</a></li>
+            <li><a href="#">Marine Debris</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="page-title">Chesapeake Bay Microplastic Survey</h1>
+
+        <div class="intro">
+            <p>
+                The Ocean Research Project conducted a comprehensive microplastic survey of the Chesapeake Bay
+                in Fall 2023 aboard the SRV Marie Tharp. Our team collected samples from 25 stations across
+                the bay, analyzing microplastic concentrations, water quality parameters, and environmental conditions.
+            </p>
+            <p style="margin-top: 15px;">
+                Explore our findings using the interactive story map below. You can query the data naturally,
+                view sampling locations, and download datasets for your own analysis.
+            </p>
+        </div>
+
+        <div class="note-box">
+            <strong>🧪 Interactive Demo:</strong> This story map demonstrates AI-enabled data exploration.
+            Ask questions in plain language, explore the map, and interact with our research data.
+        </div>
+
+        <!-- EMBEDDED STREAMLIT APP -->
+        <div class="iframe-container">
+            <iframe
+                src="http://localhost:8501"
+                width="100%"
+                height="800"
+                frameborder="0"
+                style="border: none;">
+            </iframe>
+        </div>
+
+        <div class="note-box" style="margin-top: 30px;">
+            <strong>💡 About This Tool:</strong> This interactive story map was developed in partnership with
+            Resonant Knowledge Lab to make our marine science data more accessible to researchers, educators,
+            and the general public.
+        </div>
+
+        <h2 style="margin-top: 40px; color: #0066cc;">Additional Resources</h2>
+        <ul style="margin: 20px 0; padding-left: 40px;">
+            <li>Download our <a href="#">Fall 2023 Full Report (PDF)</a></li>
+            <li>View <a href="#">Raw Data Files (KML/Excel)</a></li>
+            <li>Learn about our <a href="#">Research Methods</a></li>
+            <li>Explore <a href="#">Spring 2024 Results</a></li>
+        </ul>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Ocean Research Project | SRV Marie Tharp</p>
+        <p style="margin-top: 10px;">
+            <a href="#" style="color: #4da6ff; text-decoration: none;">Contact Us</a> |
+            <a href="#" style="color: #4da6ff; text-decoration: none;">Support Our Work</a>
+        </p>
+    </footer>
+</body>
+</html>

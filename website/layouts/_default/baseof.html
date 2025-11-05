@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>{{ block "title" . }}{{ .Params.meta_title | default (printf "%s - %s" .Title .Site.Title) }}{{ end }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicon & metadata -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+  <meta name="theme-color" content="#0a2342">
+
+  {{ partial "google-fonts.html" . }}
+
+  <!-- CSS-->
+  {{ $css_options := dict "targetPath" "css/style.css" "enableSourceMap" (not hugo.IsProduction) }}
+  {{ $style := resources.Get "scss/style.scss" | resources.ExecuteAsTemplate "style.scss" . | toCSS $css_options }}
+  {{ if hugo.IsProduction }}
+    {{ $style = $style | minify | fingerprint }}
+  {{ end }}
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+
+  <!-- Custom RKL CSS - Timestamp for cache busting -->
+  <link rel="stylesheet" href="/css/rkl-custom.css?t={{ now.Unix }}">
+
+  {{ block "header_css" . }}{{ end }}
+
+  {{ block "meta_tags" . }}
+    {{ with .Params.description }}<meta name="description" content="{{ . }}"/>{{ end }}
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="{{ if .IsHome }}Resonant Knowledge Lab{{ else }}{{ .Params.meta_title | default .Title }}{{ end }}">
+    <meta property="og:description" content="{{ if .IsHome }}Open infrastructure enabling large-scale artificial intelligence reasoning systems to interact securely with curated, locally governed knowledge domains — without exposing or transferring sensitive data.{{ else }}{{ .Params.description }}{{ end }}">
+    <meta property="og:image" content="https://resonantknowledgelab.org/images/logo.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ .Permalink }}">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ if .IsHome }}Resonant Knowledge Lab{{ else }}{{ .Params.meta_title | default .Title }}{{ end }}">
+    <meta name="twitter:description" content="{{ if .IsHome }}Secure Coproduction with AI{{ else }}{{ .Params.description }}{{ end }}">
+    <meta name="twitter:image" content="https://resonantknowledgelab.org/images/logo.png">
+    {{ with .Site.Params.seo.meta_twitter_site }}<meta name="twitter:site" content="{{ . }}"/>{{ end }}
+    {{ with .Site.Params.seo.meta_twitter_creator }}<meta name="twitter:creator" content="{{ . }}"/>{{ end }}
+  {{ end }}
+
+</head>
+
+<body class='page {{ block "body_classes" . }}{{ end }}'>
+  <div style="background:#fef3c7;color:#92400e;padding:0.75em;text-align:center;font-family:sans-serif;">
+    <strong>Private Draft:</strong> Resonant Knowledge Lab website for board review only. Not an official or public release.
+  </div>
+  {{ partial "main-menu-mobile.html" . }}
+  <div class="wrapper">
+    {{ partial "header.html" . }}
+    {{ block "main" . }}
+    {{ end }}
+  </div>
+
+  {{ partial "footer.html" . }}
+  {{ partial "sub-footer.html" . }}
+
+  {{ $scripts := resources.Get "js/scripts.js" }}
+
+  {{ block "footer_js" . }}
+  {{ end }}
+
+  {{ if hugo.IsProduction }}
+    {{ $scripts = $scripts | minify | fingerprint }}
+  {{ end }}
+  <script type="text/javascript" src="{{ $scripts.RelPermalink }}"></script>
+
+  {{ partial "google-tag-manager.html" . }}
+  {{ partial "google-analytics.html" . }}
+
+  <!-- Prevent browser scroll restoration on page load -->
+  <script>
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.scrollTo(0, 0);
+  </script>
+
+  <!-- Scroll-triggered fade-in animation for sections and cards -->
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(() => {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      // Observe both cards and section wrappers
+      document.querySelectorAll(".effort-card, .fade-section").forEach(el =>
+        observer.observe(el)
+      );
+    }, 300);
+  });
+  </script>
+</body>
+
+</html>

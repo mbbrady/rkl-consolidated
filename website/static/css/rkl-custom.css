@@ -1,0 +1,1457 @@
+/* RKL Custom Styles - Inspired by Let's Encrypt clean design */
+/* Original design - no code copied */
+
+/* Prevent layout shift and scroll jump */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-display: swap; /* prevent top jump from late font rendering */
+}
+
+:root {
+  --rkl-blue: #0F4C81;
+  --rkl-blue-light: #4A90E2;
+  --rkl-blue-dark: #0A3660;
+  --rkl-accent: #E67E22;
+  --rkl-gray-light: #F8F9FA;
+  --rkl-gray-medium: #6C757D;
+  --rkl-gray-dark: #343A40;
+  --rkl-white: #FFFFFF;
+  --rkl-spacing-xs: 0.5rem;
+  --rkl-spacing-sm: 1rem;
+  --rkl-spacing-md: 2rem;
+  --rkl-spacing-lg: 3rem;
+  --rkl-spacing-xl: 4rem;
+}
+
+/* Header and Navigation - GPT refined styling v6 */
+/* Header background and subtle shadow for separation */
+.header {
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(10, 35, 66, 0.06);
+}
+
+/* Smooth fade-in when page loads */
+.hero, .header {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 2rem 1rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-bottom: 1px solid rgba(10, 35, 66, 0.08);
+}
+
+/* Logo + Wordmark layout */
+.header .logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.header .logo img {
+  height: 44px;
+  transform: translateY(3px);
+  border-radius: 50%;
+  margin-right: 0.6rem; /* space between logo and text */
+}
+
+.header .site-title {
+  font-family: "Libre Baskerville", serif;
+  font-weight: 600; /* matches the hero title weight */
+  font-size: 1.05rem;
+  color: #0a2342;
+  letter-spacing: 0.015rem; /* slight tracking for elegance */
+  line-height: 1;
+  white-space: nowrap;
+  margin-top: 2px; /* aligns baseline to logo */
+  transition: color 0.25s ease;
+}
+
+.header .site-title:hover {
+  color: #d85a38; /* subtle accent hover, matches footer orange */
+}
+
+/* Legacy .rkl-logo class styling */
+.rkl-logo {
+  height: 44px;
+  width: auto;
+  margin-top: 2px;
+  margin-left: 0.25rem;
+  border-radius: 50%;
+  vertical-align: middle;
+  transition: transform 0.25s ease;
+}
+
+.rkl-logo:hover {
+  transform: scale(1.04);
+}
+
+/* Mobile logo sizing */
+.logo-mobile .rkl-logo {
+  height: 40px;
+  width: auto;
+}
+
+/* Screen reader only text for accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.header .main-menu a {
+  font-weight: 500;
+  color: #0a2342 !important;
+  margin-left: 1.4rem;
+  transition: color 0.2s ease;
+}
+
+.header .main-menu a:hover {
+  color: #ff8b7b !important;
+}
+
+/* Optional: slightly smaller nav spacing for balance */
+.navbar a {
+  margin-left: 1.6rem;
+}
+
+/* Legacy nav styles (backup) */
+.nav {
+  background-color: var(--rkl-white);
+  border-bottom: 1px solid #E9ECEF;
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.nav .nav_brand a {
+  color: var(--rkl-blue);
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-decoration: none;
+}
+
+.nav .nav_brand a:hover {
+  color: var(--rkl-blue-light);
+}
+
+.nav_menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 2rem;
+}
+
+.nav_menu li a {
+  color: var(--rkl-gray-dark);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav_menu li a:hover {
+  color: var(--rkl-blue);
+}
+
+/* Mobile menu improvements */
+@media (max-width: 768px) {
+  .nav_menu {
+    background-color: var(--rkl-white);
+    border: 1px solid #E9ECEF;
+    border-radius: 4px;
+    margin-top: 1rem;
+  }
+
+  .nav_menu li {
+    border-bottom: 1px solid #E9ECEF;
+  }
+
+  .nav_menu li:last-child {
+    border-bottom: none;
+  }
+
+  .nav_menu li a {
+    display: block;
+    padding: 1rem;
+  }
+}
+
+/* Reset theme styles for custom home page */
+.home .wrap.content {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+}
+
+.home .post_content {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.home .post_body {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Hero Section - GPT refined styling v2 */
+.intro {
+  background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+  padding: 6rem 1rem 5rem;
+  position: relative;
+  overflow: hidden; /* ensures the background art doesn't overflow the hero section */
+  text-align: center;
+}
+
+.intro .container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.intro h1 {
+  font-size: 3rem;
+  line-height: 1.25;
+  margin-bottom: 1.5rem;
+  color: #0a2342;
+}
+
+.intro p {
+  font-size: 1.15rem;
+  color: #5c5a5a;
+  max-width: 60ch;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1.25rem;
+  line-height: 1.7;
+}
+
+/* Subtle contrast lift for hero paragraph - consolidated with main .hero p rule below */
+
+.intro img {
+  display: none; /* hides the placeholder logo if not needed */
+}
+
+/* === HERO FIX === */
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fb 100%);
+  border-bottom: 1px solid #e6e6e6;
+  padding: 5rem 1rem 4rem;
+  min-height: auto;
+}
+
+.hero-inner {
+  max-width: 60ch;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: #1a2940;
+  margin-bottom: 0.75rem;
+}
+
+.hero-accent {
+  width: 60px;
+  height: 3px;
+  background: #e36f5c;
+  margin: 0.5rem auto 1.5rem;
+  border-radius: 2px;
+}
+
+.hero p {
+  color: #3b3b3b;
+  max-width: 68ch;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  margin-inline: auto;
+}
+
+.hero p:first-of-type {
+  margin-bottom: 1.25rem;
+}
+
+.hero em {
+  color: #0f4c81;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.hero a:not(.button) {
+  color: #0f4c81;
+}
+
+.hero .button {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  background: #e36f5c;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  margin: 0.5rem;
+}
+
+.hero .button:hover {
+  color: #ffffff;
+  background-color: #e36f5c;
+  opacity: 0.95;
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.hero img {
+  display: none;
+}
+
+/* Internal Review Box */
+.internal-review-box {
+  background: #fff5f5;
+  border: 1px solid #d4a5a5;
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin: 40px auto 0;
+  max-width: 600px;
+  text-align: center;
+}
+
+.internal-review-box h4 {
+  color: #8b5a5a;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.internal-review-box p {
+  color: #9d6b6b;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: 0 0 12px 0;
+  font-weight: 400;
+}
+
+.button-internal {
+  display: inline-block;
+  white-space: nowrap;
+  height: 36px;
+  padding: 0 18px;
+  background: #ffffff;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #2d3748;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  line-height: 34px;
+  margin: 0;
+}
+
+.button-internal:hover {
+  background: #f7fafc;
+  color: #1a202c;
+  border-color: #a0aec0;
+  transform: translateY(-1px);
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 992px) {
+  .hero {
+    padding-top: 6rem;
+    padding-bottom: 5rem;
+  }
+}
+
+/* Hero divider for visual separation */
+.hero-divider {
+  width: 80%;
+  height: 2px;
+  border: 0;
+  background: linear-gradient(to right, transparent, #d8d8d8, transparent);
+  margin: 4rem auto;
+}
+
+/* Legacy .rkl-hero styles (backup) */
+.rkl-hero {
+  background: radial-gradient(circle at center, #f9f9fb 0%, #ffffff 100%) !important;
+  padding-top: 6rem !important;
+  padding-bottom: 5rem !important;
+  padding-left: var(--rkl-spacing-md) !important;
+  padding-right: var(--rkl-spacing-md) !important;
+  text-align: center !important;
+  margin-bottom: 0 !important;
+  width: 100% !important;
+  max-width: 1100px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.rkl-hero-org {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  color: #5c5a5a !important;
+  margin-bottom: var(--rkl-spacing-sm) !important;
+}
+
+.rkl-hero-title {
+  font-size: 2.75rem !important;
+  font-weight: 600 !important;
+  margin-bottom: var(--rkl-spacing-sm) !important;
+  line-height: 1.2 !important;
+  color: #0a2342 !important;
+}
+
+.rkl-hero-subtitle {
+  font-size: 1.1rem !important;
+  margin-bottom: 1.25rem !important;
+  max-width: 620px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  color: #5c5a5a !important;
+}
+
+/* Hero fade-in animation - targets actual HTML elements */
+.intro h1,
+.intro p {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.intro p {
+  animation-delay: 0.2s;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Keep class-based animation for custom sections */
+.rkl-hero-title,
+.rkl-hero-subtitle {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.rkl-hero-subtitle {
+  animation-delay: 0.2s;
+}
+
+.rkl-hero-buttons {
+  display: flex !important;
+  gap: var(--rkl-spacing-sm) !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+}
+
+/* Buttons - GPT refined styling v2 */
+.btn {
+  background-color: #ff8b7b;
+  border-radius: 6px;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  transition: all 0.25s ease-in-out;
+}
+
+.btn:hover {
+  background-color: #0a2342;
+  color: #ffffff;
+}
+
+/* Legacy RKL button styles (backup) */
+.rkl-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.rkl-btn-primary {
+  background-color: var(--rkl-accent);
+  color: var(--rkl-white);
+}
+
+.rkl-btn-primary:hover {
+  background-color: #D35400;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(230, 126, 34, 0.3);
+}
+
+.rkl-btn-secondary {
+  background-color: transparent;
+  color: var(--rkl-white);
+  border-color: var(--rkl-white);
+}
+
+.rkl-btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Impact Statistics */
+.rkl-stats {
+  padding: var(--rkl-spacing-lg) var(--rkl-spacing-md);
+  background-color: var(--rkl-gray-light);
+  margin-top: 3rem;
+  margin-bottom: var(--rkl-spacing-lg);
+}
+
+.rkl-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--rkl-spacing-md);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.rkl-stat-card {
+  text-align: center;
+  padding: var(--rkl-spacing-md);
+  background-color: var(--rkl-white);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.rkl-stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--rkl-blue);
+  display: block;
+  margin-bottom: var(--rkl-spacing-xs);
+}
+
+.rkl-stat-label {
+  font-size: 0.875rem;
+  color: var(--rkl-gray-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+/* Program Cards */
+.rkl-programs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--rkl-spacing-md);
+  margin-bottom: var(--rkl-spacing-lg);
+}
+
+.rkl-program-card {
+  background-color: var(--rkl-white);
+  border: 1px solid #E9ECEF;
+  border-radius: 8px;
+  padding: var(--rkl-spacing-md);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.rkl-program-card:hover {
+  box-shadow: 0 8px 24px rgba(15, 76, 129, 0.15);
+  transform: translateY(-4px);
+  border-color: var(--rkl-blue-light);
+}
+
+.rkl-program-icon {
+  font-size: 2rem;
+  margin-bottom: var(--rkl-spacing-sm);
+}
+
+.rkl-program-title {
+  font-size: 1.25rem;
+  color: var(--rkl-blue-dark);
+  margin-bottom: var(--rkl-spacing-xs);
+  font-weight: 600;
+}
+
+.rkl-program-desc {
+  color: var(--rkl-gray-medium);
+  line-height: 1.6;
+  margin-bottom: var(--rkl-spacing-sm);
+  flex-grow: 1;
+}
+
+.rkl-program-link {
+  color: var(--rkl-blue);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  margin-top: auto;
+}
+
+.rkl-program-link:hover {
+  color: var(--rkl-blue-light);
+  text-decoration: underline;
+}
+
+/* Partner Showcase */
+.rkl-partners {
+  background-color: var(--rkl-gray-light);
+  padding: var(--rkl-spacing-lg) var(--rkl-spacing-md);
+  margin-bottom: var(--rkl-spacing-lg);
+  text-align: center;
+}
+
+.rkl-partners h2 {
+  color: var(--rkl-blue-dark);
+  margin-bottom: var(--rkl-spacing-md);
+  font-size: 1.75rem;
+}
+
+.rkl-partner-logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--rkl-spacing-md);
+  opacity: 0.7;
+}
+
+.rkl-partner-logo {
+  height: 60px;
+  width: auto;
+  filter: grayscale(100%);
+  transition: all 0.3s ease;
+}
+
+.rkl-partner-logo:hover {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* Updates/Blog Section */
+.rkl-updates {
+  padding: var(--rkl-spacing-md);
+  margin-bottom: var(--rkl-spacing-lg);
+}
+
+.rkl-updates h2 {
+  color: var(--rkl-blue-dark);
+  margin-bottom: var(--rkl-spacing-md);
+  font-size: 1.75rem;
+  text-align: center;
+}
+
+.rkl-update-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--rkl-spacing-md);
+}
+
+.rkl-update-item {
+  background-color: var(--rkl-white);
+  border-left: 4px solid var(--rkl-blue);
+  padding: var(--rkl-spacing-sm);
+  transition: all 0.2s ease;
+}
+
+.rkl-update-item:hover {
+  border-left-color: var(--rkl-accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rkl-update-date {
+  font-size: 0.875rem;
+  color: var(--rkl-gray-medium);
+  margin-bottom: var(--rkl-spacing-xs);
+}
+
+.rkl-update-title {
+  font-size: 1.125rem;
+  color: var(--rkl-blue-dark);
+  margin-bottom: var(--rkl-spacing-xs);
+  font-weight: 600;
+}
+
+.rkl-update-summary {
+  color: var(--rkl-gray-medium);
+  line-height: 1.6;
+}
+
+/* Section Containers */
+.rkl-section {
+  padding: var(--rkl-spacing-lg) var(--rkl-spacing-md);
+  margin-bottom: var(--rkl-spacing-lg);
+}
+
+.rkl-section-alt {
+  background-color: var(--rkl-gray-light);
+}
+
+.rkl-section-cta {
+  background-color: var(--rkl-blue);
+  color: var(--rkl-white);
+}
+
+.rkl-section-cta h2,
+.rkl-section-cta h4 {
+  color: var(--rkl-white);
+}
+
+.rkl-section-cta p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.rkl-section-about {
+  background-color: var(--rkl-gray-dark);
+  color: var(--rkl-white);
+  text-align: center;
+}
+
+.rkl-section-title {
+  text-align: center;
+  color: var(--rkl-blue-dark);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: var(--rkl-spacing-md);
+}
+
+.rkl-section-intro {
+  text-align: center;
+  color: var(--rkl-gray-medium);
+  font-size: 1.125rem;
+  margin-bottom: var(--rkl-spacing-lg);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Transparency Badge */
+.rkl-transparency-badge {
+  background-color: var(--rkl-white);
+  border: 2px solid var(--rkl-blue);
+  border-radius: 8px;
+  padding: var(--rkl-spacing-md);
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.rkl-transparency-badge h3 {
+  margin-bottom: var(--rkl-spacing-sm);
+  font-size: 1.5rem;
+  color: var(--rkl-blue-dark);
+}
+
+.rkl-transparency-badge p {
+  color: var(--rkl-gray-medium);
+  margin-bottom: var(--rkl-spacing-md);
+}
+
+.rkl-btn-outline {
+  background-color: transparent;
+  color: var(--rkl-blue);
+  border: 2px solid var(--rkl-blue);
+}
+
+.rkl-btn-outline:hover {
+  background-color: var(--rkl-blue);
+  color: var(--rkl-white);
+}
+
+/* Year 1 Focus */
+.rkl-year1-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--rkl-spacing-md);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.rkl-focus-card {
+  background-color: var(--rkl-white);
+  border: 1px solid #E9ECEF;
+  border-radius: 8px;
+  padding: var(--rkl-spacing-md);
+}
+
+.rkl-focus-card h4 {
+  color: var(--rkl-blue-dark);
+  font-size: 1.125rem;
+  margin-bottom: var(--rkl-spacing-sm);
+  font-weight: 600;
+}
+
+.rkl-focus-card p {
+  color: var(--rkl-gray-medium);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* CTA Cards */
+.rkl-cta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--rkl-spacing-md);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.rkl-cta-card {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: var(--rkl-spacing-md);
+  text-align: center;
+}
+
+.rkl-cta-card h4 {
+  color: var(--rkl-white);
+  font-size: 1.25rem;
+  margin-bottom: var(--rkl-spacing-sm);
+  font-weight: 600;
+}
+
+.rkl-cta-card p {
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: var(--rkl-spacing-md);
+}
+
+/* About Section */
+.rkl-about-text {
+  font-size: 1.125rem;
+  max-width: 800px;
+  margin: 0 auto var(--rkl-spacing-md);
+  line-height: 1.6;
+}
+
+.rkl-about-contact {
+  font-size: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive Design - GPT refined */
+@media (max-width: 768px) {
+  .hero,
+  .intro {
+    padding: 5rem 1.25rem 3rem 1.25rem;
+  }
+
+  .hero h1,
+  .intro h1 {
+    font-size: 2rem;
+  }
+
+  .services {
+    padding: 3rem 1rem;
+  }
+
+  .service {
+    padding: 1.5rem;
+  }
+
+  .header .main-menu a {
+    margin-left: 0.75rem;
+  }
+
+  /* Legacy responsive styles */
+  .rkl-hero h1 {
+    font-size: 2rem;
+  }
+
+  .rkl-hero p {
+    font-size: 1.125rem;
+  }
+
+  .rkl-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .rkl-programs {
+    grid-template-columns: 1fr;
+  }
+
+  .rkl-hero-buttons {
+    flex-direction: column;
+  }
+
+  .rkl-btn {
+    width: 100%;
+  }
+}
+
+/* Mobile header adjustments */
+@media (max-width: 768px) {
+  .header .container {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.8rem 1.2rem;
+  }
+
+  .header .logo img {
+    height: 38px;
+    transform: translateY(2px);
+  }
+
+  .header .site-title {
+    font-size: 1rem;
+  }
+
+  .header .main-menu {
+    display: none; /* hide the nav links for now if you plan to add a mobile menu later */
+  }
+}
+
+/* Small mobile - hide site title for clean header */
+@media (max-width: 600px) {
+  .header .site-title {
+    display: none; /* keeps the mobile header clean */
+  }
+}
+
+/* Small mobile - show site name next to logo */
+@media (max-width: 640px) {
+  .header .logo::after {
+    content: " Resonant Knowledge Lab";
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #0a2342;
+    margin-left: 0.4rem;
+  }
+}
+
+/* Clean spacing and typography - GPT refined */
+body {
+  background-color: #f9f9fb;
+  color: #0a2342;
+  font-family: "Inter", "Helvetica Neue", sans-serif;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  margin-top: 0;
+}
+
+p {
+  margin-top: 0;
+}
+
+a {
+  color: var(--rkl-blue);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--rkl-blue-light);
+}
+
+/* Utility Classes */
+.rkl-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--rkl-spacing-md);
+}
+
+/* Consistent max-width for readability - GPT refined */
+.container,
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Services Section - GPT refined styling v2 */
+.services {
+  background-color: #f9f9fb;
+  padding: 5rem 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 2rem;
+}
+
+.service {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(10, 35, 66, 0.04);
+  transition: all 0.25s ease;
+}
+
+.service:hover {
+  transform: translateY(-4px);
+  border-color: #ff8b7b;
+  box-shadow: 0 4px 12px rgba(10, 35, 66, 0.08);
+}
+
+.rkl-text-center {
+  text-align: center;
+}
+
+.rkl-mb-lg {
+  margin-bottom: var(--rkl-spacing-lg);
+}
+
+.rkl-mt-lg {
+  margin-top: var(--rkl-spacing-lg);
+}
+
+/* Footer - GPT refined styling v2 */
+footer {
+  background-color: #0a2342;
+  color: #ffffff;
+  padding: 2.5rem 0;
+}
+
+footer::before {
+  content: "";
+  display: block;
+  height: 3px;
+  background-color: #ffffff;
+  opacity: 0.6;
+  margin-bottom: 1rem;
+}
+
+footer a {
+  color: #ff8b7b;
+}
+
+.footer-bottom {
+  background-color: #ff8b7b;
+  color: #ffffff;
+  font-weight: 500;
+  padding: 0.75rem 0;
+  text-align: center;
+  letter-spacing: 0.01em;
+  font-size: 0.9rem;
+}
+
+/* === Lines of Effort Section === */
+.lines-section {
+  background-color: #fafafa;
+  color: #333;
+}
+
+.section-title {
+  font-family: "Libre Baskerville", serif;
+  color: #0B2545;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.section-intro {
+  max-width: 42rem;
+  color: #555;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.subsection-title {
+  font-family: "Libre Baskerville", serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #0B2545;
+}
+
+.effort-card {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 1rem;
+  padding: 28px; /* Reduced from 32px for denser, more cohesive feel */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 280px; /* Ensures cards align at bottom even with text variations */
+  cursor: pointer; /* Make entire card feel clickable */
+}
+
+.effort-card h4 {
+  font-family: "Libre Baskerville", serif;
+  color: #0B2545;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.25;
+  min-height: 2.6em;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+
+.effort-card p {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.6;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.effort-card:hover {
+  transform: translateY(-2px); /* Subtle lift on hover */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06); /* Enhanced shadow on hover */
+  border-color: rgba(227, 111, 92, 0.4); /* Thin, soft coral border on hover */
+}
+
+/* Emerging areas - slightly grayed out to differentiate from active areas */
+.effort-card:not(.active) {
+  background: #f8f9fa;
+  opacity: 0.85;
+}
+
+.effort-card:not(.active):hover {
+  opacity: 1;
+}
+
+/* Demo link styling */
+.pilot-demo-link {
+  display: inline-block;
+  color: #e36f5c;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  letter-spacing: 0.01em;
+}
+
+.pilot-demo-link:hover {
+  color: #c55a48;
+  transform: translateX(3px);
+  text-decoration: none;
+}
+
+.divider {
+  width: 3rem;
+  height: 1px;
+  background-color: #ccc;
+}
+
+/* === Fade-in Animation for Sections and Cards === */
+
+/* Section-level fade-in */
+.fade-section {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.fade-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card-level fade-in */
+.effort-card {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  will-change: opacity, transform; /* stabilize animation reflow */
+}
+
+.effort-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered animation delays for visual flow */
+.effort-card:nth-child(2) {
+  transition-delay: 0.1s;
+}
+
+.effort-card:nth-child(3) {
+  transition-delay: 0.2s;
+}
+
+/* Responsive tuning */
+@media (max-width: 768px) {
+  .section-intro {
+    font-size: 0.95rem;
+    padding: 0 1rem;
+  }
+  .effort-card {
+    padding: 1.25rem;
+  }
+}
+
+/* Wiki page left-align fix */
+.section.wiki .container,
+section[class*="wiki"] .container,
+.post.type-wiki .post_content,
+body.section-wiki .container {
+  text-align: left;
+}
+
+/* Ensure wiki headings and content are left-aligned */
+.section.wiki h1,
+.section.wiki h2,
+.section.wiki h3,
+.section.wiki p {
+  text-align: left;
+}
+
+/* Wiki page left-align fix */
+body.page-default-list .intro,
+body.page-default-list .intro .container {
+  text-align: left;
+}
+
+body.page-default-list .intro h1,
+body.page-default-list .intro h2,
+body.page-default-list .intro h3,
+body.page-default-list .intro p {
+  text-align: left;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Disable fade-in animation for wiki page content except hero text */
+body.page-default-list .intro h2,
+body.page-default-list .intro h3,
+body.page-default-list .intro h4,
+body.page-default-list .intro h5,
+body.page-default-list .intro h6 {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+/* Remove animation from all paragraphs after the first intro paragraph */
+body.page-default-list .intro p:nth-of-type(n+2) {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+/* Keep animation only for h1 and first paragraph */
+body.page-default-list .intro h1 {
+  animation: fadeUp 0.8s ease forwards;
+}
+
+body.page-default-list .intro p:first-of-type {
+  animation: fadeUp 0.8s ease forwards;
+  animation-delay: 0.2s;
+}
+
+/* GPT-5 spacing improvements - tighter hero to next section */
+.hero {
+  padding-top: 88px;
+  padding-bottom: 56px;
+}
+
+.lines-section {
+  padding-top: 64px;
+  padding-bottom: 64px;
+  margin-top: 0; /* Remove extra margin, rely on hero bottom padding */
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 64px;
+    padding-bottom: 40px;
+  }
+  
+  .lines-section {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+}
+
+/* GPT-5 Typography & Layout Polish */
+
+/* Type scale refinements */
+.hero h1,
+.intro h1 {
+  font-size: clamp(2.75rem, 5vw, 3.25rem); /* 44-52px */
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  font-weight: 600; /* Refined, not extra-bold */
+}
+
+/* Section H2 */
+.section-title,
+.lines-section h2 {
+  font-size: clamp(1.75rem, 3vw, 2rem); /* 28-32px */
+  line-height: 1.25;
+  font-weight: 600;
+}
+
+/* Body text */
+.hero p {
+  font-size: 0.98rem;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  max-width: 68ch;
+  margin-inline: auto;
+  font-weight: 400;
+}
+
+.section-intro,
+.effort-card p {
+  font-size: clamp(1.0625rem, 1.5vw, 1.125rem); /* 17-18px */
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* Container widths - hero text narrow, cards wider */
+.hero .container,
+.intro .container {
+  max-width: 750px; /* 720-780px range for hero text */
+}
+
+.lines-section .container {
+  max-width: 1100px; /* Card grid wider for balance */
+}
+
+/* 8px baseline rhythm for vertical spacing */
+.hero {
+  padding-top: 96px;  /* 12 × 8px */
+  padding-bottom: 48px; /* 6 × 8px - tightened for better visual flow */
+}
+
+.lines-section {
+  padding-top: 56px;  /* 7 × 8px - tightened to match hero */
+  padding-bottom: 64px;
+}
+
+.effort-card {
+  padding: 24px; /* 3 × 8px */
+  margin-bottom: 24px;
+}
+
+.hero .button {
+  margin-top: 24px; /* 3 × 8px */
+  padding: 12px 24px; /* 1.5 × 8px and 3 × 8px */
+}
+
+/* Mobile adjustments with 8px rhythm */
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 64px;  /* 8 × 8px */
+    padding-bottom: 48px; /* 6 × 8px */
+  }
+
+  .lines-section {
+    padding-top: 48px;  /* 6 × 8px */
+    padding-bottom: 48px;
+  }
+
+  .effort-card {
+    padding: 16px; /* 2 × 8px */
+  }
+}
+
+/* Wiki page width override - make content wider like the rest of the site */
+body.page-default-list .intro,
+body.section-wiki .intro,
+body.section-wiki .hero {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+body.page-default-list .intro .container,
+body.page-default-list .container,
+body.section-wiki .intro .container,
+body.section-wiki .hero .container,
+body.section-wiki .hero-inner,
+body.section-wiki .container {
+  max-width: 1100px !important; /* Match site-wide content width */
+  width: 100% !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+}
+
+body.page-default-list .intro h1,
+body.page-default-list .intro h2,
+body.page-default-list .intro h3,
+body.page-default-list .intro p,
+body.page-default-list .intro ul,
+body.page-default-list .intro ol,
+body.section-wiki .intro h1,
+body.section-wiki .intro h2,
+body.section-wiki .intro h3,
+body.section-wiki .intro p,
+body.section-wiki .intro ul,
+body.section-wiki .intro ol,
+body.section-wiki .hero h1,
+body.section-wiki .hero p {
+  max-width: 100% !important; /* Remove narrow character limits */
+  width: 100% !important;
+}
+
+body.page-default-list .post_content,
+body.page-default-list .post_body,
+body.section-wiki .post_content,
+body.section-wiki .post_body {
+  max-width: 1100px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
+}
+
+/* Override any theme-level narrow containers */
+.page-default-list .container,
+.section-wiki .container {
+  max-width: 1100px !important;
+}
+
+/* Ensure list pages have full width content */
+.page-default-list main,
+.section-wiki main {
+  max-width: 1100px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+}

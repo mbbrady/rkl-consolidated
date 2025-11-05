@@ -1,0 +1,173 @@
+{{ define "main" }}
+
+<!-- Hero Section -->
+<section class="rkl-hero">
+  <div class="rkl-container">
+    <div class="rkl-hero-org">Resonant Knowledge Lab</div>
+    <h1 class="rkl-hero-title">Secure Co-Design Between Frontier AI and Human Knowledge</h1>
+    <p class="rkl-hero-subtitle">
+      Open infrastructure that enables reasoning systems like GPT and Claude to work with knowledge domains organizations choose to expose—without transferring sensitive information.
+    </p>
+    <div class="rkl-hero-buttons">
+      <a href="/about/" class="rkl-btn rkl-btn-primary">Learn More</a>
+      <a href="/programs/" class="rkl-btn rkl-btn-secondary">Our Programs</a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="rkl-stats">
+  <div class="rkl-container">
+    <div class="rkl-stats-grid">
+      <div class="rkl-stat-card">
+        <div class="rkl-stat-number">Year 1</div>
+        <div class="rkl-stat-label">Building Foundation</div>
+      </div>
+      <div class="rkl-stat-card">
+        <div class="rkl-stat-number">3</div>
+        <div class="rkl-stat-label">Priority Projects</div>
+      </div>
+      <div class="rkl-stat-card">
+        <div class="rkl-stat-number">100%</div>
+        <div class="rkl-stat-label">Open Source</div>
+      </div>
+      <div class="rkl-stat-card">
+        <div class="rkl-stat-number">6</div>
+        <div class="rkl-stat-label">Program Areas</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- What We Do Section -->
+<section class="rkl-section">
+  <div class="rkl-container">
+    <h2 class="rkl-section-title">What We Do</h2>
+    <p class="rkl-section-intro">
+      We provide tools that help organizations select, curate, and govern which knowledge to make accessible to AI—maintaining full agency over what is exposed and how it can be used.
+    </p>
+
+    <div class="rkl-programs-grid">
+      <div class="rkl-program-card">
+        <div class="rkl-program-icon">🔒</div>
+        <h3 class="rkl-program-title">Open Protocols</h3>
+        <p class="rkl-program-desc">
+          Apply and refine public-interest protocols like Model Context Protocol (MCP) for secure AI-knowledge interaction.
+        </p>
+        <a href="/programs/#open-protocols" class="rkl-program-link">Learn more →</a>
+      </div>
+
+      <div class="rkl-program-card">
+        <div class="rkl-program-icon">🛠️</div>
+        <h3 class="rkl-program-title">Reference Implementations</h3>
+        <p class="rkl-program-desc">
+          Build open-source adapters, audit logging, and reproducible on-premises stacks organizations can deploy.
+        </p>
+        <a href="/programs/#implementations" class="rkl-program-link">Learn more →</a>
+      </div>
+
+      <div class="rkl-program-card">
+        <div class="rkl-program-icon">🚀</div>
+        <h3 class="rkl-program-title">Field Pilots</h3>
+        <p class="rkl-program-desc">
+          Partner with organizations to deploy real-world systems that bridge research and institutional knowledge.
+        </p>
+        <a href="/programs/#pilots" class="rkl-program-link">Learn more →</a>
+      </div>
+
+      <div class="rkl-program-card">
+        <div class="rkl-program-icon">⚖️</div>
+        <h3 class="rkl-program-title">Governance Frameworks</h3>
+        <p class="rkl-program-desc">
+          Publish templates for consent, data licensing, and policy-based access control.
+        </p>
+        <a href="/programs/#governance" class="rkl-program-link">Learn more →</a>
+      </div>
+
+      <div class="rkl-program-card">
+        <div class="rkl-program-icon">🔬</div>
+        <h3 class="rkl-program-title">Applied Research</h3>
+        <p class="rkl-program-desc">
+          Study how human-machine reasoning can responsibly contribute to knowledge creation.
+        </p>
+        <a href="/programs/#research" class="rkl-program-link">Learn more →</a>
+      </div>
+
+      <div class="rkl-program-card">
+        <div class="rkl-program-icon">📚</div>
+        <h3 class="rkl-program-title">Education & Training</h3>
+        <p class="rkl-program-desc">
+          Build capacity through workshops and training labs on ethical AI and knowledge governance.
+        </p>
+        <a href="/programs/#education" class="rkl-program-link">Learn more →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Infrastructure Section -->
+<section class="rkl-section rkl-section-alt">
+  <div class="rkl-container">
+    <div class="rkl-transparency-badge">
+      <h3>Independent Infrastructure</h3>
+      <p>
+        RKL maintains independent computational infrastructure to ensure research is reproducible, auditable, and transparent.
+      </p>
+      <a href="/transparency/" class="rkl-btn rkl-btn-outline">View Transparency Reports →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Year 1 Focus Section -->
+<section class="rkl-section">
+  <div class="rkl-container">
+    <h2 class="rkl-section-title">Year 1 Focus (2025-2026)</h2>
+    <div class="rkl-year1-grid">
+      <div class="rkl-focus-card">
+        <h4>MCP + Closed RAG Reference Stack</h4>
+        <p>Building and documenting a reproducible, privacy-preserving AI context environment using local compute—demonstrating "trust through protocol" in practice.</p>
+      </div>
+      <div class="rkl-focus-card">
+        <h4>Field Pilot</h4>
+        <p>Partnering with one organization (archive, clinic, or municipality) to deploy and validate the RKL stack in a real-world context, producing a public case study.</p>
+      </div>
+      <div class="rkl-focus-card">
+        <h4>Governance Toolkit v1</h4>
+        <p>Publishing templates for consent, data licensing, and policy-based access that bridge technical and institutional audiences.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Get Involved Section -->
+<section class="rkl-section rkl-section-cta">
+  <div class="rkl-container">
+    <h2 class="rkl-section-title">Get Involved</h2>
+    <div class="rkl-cta-grid">
+      <div class="rkl-cta-card">
+        <h4>Partner With Us</h4>
+        <p>Community organization, academic institution, or nonprofit interested in ethical AI? We're seeking partners for pilot programs.</p>
+        <a href="/contact/" class="rkl-btn rkl-btn-primary">Contact Us</a>
+      </div>
+      <div class="rkl-cta-card">
+        <h4>Support Our Work</h4>
+        <p>As a 501(c)(3) nonprofit, RKL relies on grants and donations to advance our mission and provide free resources to communities.</p>
+        <a href="/contact/" class="rkl-btn rkl-btn-primary">Learn How</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="rkl-section rkl-section-about">
+  <div class="rkl-container">
+    <p class="rkl-about-text">
+      <strong>Resonant Knowledge Lab</strong> is a Virginia-based 501(c)(3) nonprofit organization established in 2025. We provide the public-interest infrastructure layer for responsible AI-knowledge interaction.
+    </p>
+    <p class="rkl-about-contact">
+      <strong>Contact:</strong> info@resonantknowledgelab.org
+    </p>
+  </div>
+</section>
+
+{{ end }}

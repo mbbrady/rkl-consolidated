@@ -1,0 +1,136 @@
+// Custom mobile fixes for RKL website
+
+// Fix intro section on mobile - prevent content from being pushed off-screen
+.intro {
+  // Reduce padding on mobile to fit content better
+  padding-top: 40px;
+  padding-bottom: 40px;
+  min-height: auto;
+
+  @include media-breakpoint-up(md) {
+    padding-top: 140px;
+    padding-bottom: 140px;
+  }
+
+  // Make sure content is visible on mobile
+  .col-12 {
+    z-index: 2;
+    position: relative;
+  }
+
+  // Ensure text is readable on mobile
+  h1 {
+    font-size: 32px !important;
+    margin-bottom: 20px;
+    width: 100% !important;
+
+    @include media-breakpoint-up(md) {
+      font-size: 48px !important;
+      width: 80% !important;
+    }
+  }
+
+  h2, p {
+    width: 100% !important;
+    font-size: 1rem;
+
+    @include media-breakpoint-up(md) {
+      width: 80% !important;
+      font-size: 1.2rem;
+    }
+  }
+
+  blockquote {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+
+    @include media-breakpoint-up(md) {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Fix intro image positioning on mobile
+.intro-image-absolute {
+  // On mobile, don't use absolute positioning
+  position: relative !important;
+  width: 100% !important;
+  max-width: 100%;
+  left: 0 !important;
+  bottom: 0 !important;
+  margin-bottom: 20px;
+
+  @include media-breakpoint-up(md) {
+    position: absolute !important;
+    bottom: -50px !important;
+    left: -50px !important;
+    width: 700px !important;
+  }
+
+  @include media-breakpoint-up(lg) {
+    bottom: -60px !important;
+    left: -60px !important;
+    width: 800px !important;
+  }
+
+  @include media-breakpoint-up(xl) {
+    bottom: -100px !important;
+    left: -70px !important;
+    width: 850px !important;
+  }
+}
+
+// Ensure intro image doesn't overflow on mobile
+.intro-image {
+  max-width: 100%;
+  height: auto;
+  margin-top: 0;
+
+  @include media-breakpoint-up(md) {
+    margin-top: -40px;
+  }
+}
+
+// Simple approach: just hide the wrong logo on mobile
+// The theme's default logic should work, we just need to not interfere
+.logo a,
+.logo-mobile a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+
+  img {
+    margin-right: 10px;
+  }
+
+  .site-title {
+    color: $black;
+    font-weight: normal;
+  }
+}
+
+.logo a .site-title {
+  font-size: 1.2rem;
+}
+
+.logo-mobile a .site-title {
+  font-size: 1rem;
+}
+
+// Lines of effort section mobile fixes
+.lines-of-effort {
+  padding: 40px 0;
+
+  @include media-breakpoint-up(md) {
+    padding: 60px 0;
+  }
+
+  .effort-card {
+    margin-bottom: 30px;
+    font-size: 0.95rem;
+
+    @include media-breakpoint-up(md) {
+      font-size: 1rem;
+    }
+  }
+}

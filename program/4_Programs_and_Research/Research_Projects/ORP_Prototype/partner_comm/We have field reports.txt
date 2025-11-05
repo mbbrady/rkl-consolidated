@@ -1,0 +1,19 @@
+We have field reports for each Arctic project during each season. We would really enjoy having some story maps to link to our website relative to our projects.
+
+We have so much content ( varying science datasets and multimedia) its hard to pull it together in an enjoyable accessible way for viewers on top of the general science and reporting deliverables.
+
+Outside of our Arctic work we would like to find a GIS intern for our microplastic project coming up in the Chesapeake Bay to help us produce storymaps for that campaign
+
+I understand! This is the website I need to update and add recent content relative to the project perhaps the story map. http://www.oceanresearchproject.org/programs/science/marine-debris/
+
+http://www.oceanresearchproject.org/programs/science/marine-debris/
+
+
+There should be point and line files. Line files are the sampling transects the vessel conducted and their are some point sampling locations to.
+I will have actual data that is associated with these sampling stations in a few weeks.
+
+I also have a gis file that indicates the concentration of microplastic at all Chesapeake bay Report locations and a file that shows the the surface temperature, salinity and buoyancy.
+
+We will have the second batch of data from the Plastic project in March.
+
+I am asking some others on our team about integration with our wordpress website and will follow up
