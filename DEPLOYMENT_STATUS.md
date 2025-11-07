@@ -71,6 +71,11 @@ The site successfully builds with:
   - `HUGO_VERSION` = `extended_0.151.2`
   - `HUGO_ENV` = `production`
 
+### Important: Cloudflare Project Type
+- **MUST use "Pages"** (not "Workers") when creating Cloudflare projects
+- Workers are for serverless functions, Pages are for static sites
+- Hugo sites require Pages deployment
+
 ## Next Steps
 
 1. ✅ Consolidate repositories
