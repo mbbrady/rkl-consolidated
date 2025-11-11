@@ -1,0 +1,52 @@
+{
+  "feeds": [
+    {
+      "name": "ArXiv AI",
+      "url": "https://arxiv.org/rss/cs.AI",
+      "category": "research",
+      "enabled": true
+    },
+    {
+      "name": "ArXiv Cryptography and Security",
+      "url": "https://arxiv.org/rss/cs.CR",
+      "category": "security",
+      "enabled": true
+    },
+    {
+      "name": "AI Alignment Forum",
+      "url": "https://www.alignmentforum.org/feed.xml",
+      "category": "safety",
+      "enabled": true
+    },
+    {
+      "name": "Google AI Blog",
+      "url": "https://blog.research.google/feeds/posts/default",
+      "category": "industry",
+      "enabled": true
+    },
+    {
+      "name": "OpenAI Blog",
+      "url": "https://openai.com/blog/rss.xml",
+      "category": "industry",
+      "enabled": false
+    },
+    {
+      "name": "Anthropic News",
+      "url": "https://www.anthropic.com/news/rss.xml",
+      "category": "industry",
+      "enabled": false
+    }
+  ],
+  "keywords": [
+    "verifiable AI",
+    "trustworthy AI",
+    "AI governance",
+    "AI safety",
+    "interpretability",
+    "alignment",
+    "responsible AI",
+    "AI policy",
+    "secure reasoning",
+    "formal verification"
+  ]
+}

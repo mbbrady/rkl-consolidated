@@ -1,0 +1,264 @@
+# Orchestration Workflow Configuration
+# Defines how agents coordinate to produce weekly briefs
+
+workflow:
+  name: "Weekly Secure Reasoning Brief Pipeline"
+  version: "1.0"
+  type: "sequential"  # Phase 1.0: sequential; Phase 1.5: parallel where possible
+
+phases:
+  - phase: "discovery"
+    description: "Collect and filter articles from RSS feeds"
+    agents:
+      - name: "feed_monitor"
+        input: "config/feeds.json"
+        output: "data/raw/feeds/{date}/"
+        timeout: 300
+        retry: 3
+
+      - name: "content_filter"
+        input: "data/raw/feeds/{date}/"
+        output: "data/intermediate/filtered/{date}.json"
+        depends_on: ["feed_monitor"]
+        timeout: 180
+        retry: 2
+
+      - name: "source_credibility"
+        input: "data/intermediate/filtered/{date}.json"
+        output: "data/intermediate/credibility/{date}.json"
+        depends_on: ["content_filter"]
+        timeout: 240
+        retry: 2
+        optional: true  # Can skip if needed
+
+  - phase: "processing"
+    description: "Summarize, translate, and analyze articles"
+    agents:
+      - name: "summarizer"
+        input: "data/intermediate/credibility/{date}.json"
+        output: "data/intermediate/summaries/{date}.json"
+        depends_on: ["content_filter"]
+        timeout: 600  # Longer for many articles
+        retry: 2
+        parallel: false  # Phase 1.0: process sequentially
+
+      - name: "translator"
+        input: "data/intermediate/summaries/{date}.json"
+        output: "data/intermediate/translations/{date}.json"
+        depends_on: ["summarizer"]
+        timeout: 400
+        retry: 2
+
+      - name: "metadata_extractor"
+        input: "data/intermediate/summaries/{date}.json"
+        output: "data/intermediate/metadata/{date}.json"
+        depends_on: ["summarizer"]
+        timeout: 300
+        retry: 2
+
+      - name: "relationship_analyzer"
+        input: "data/intermediate/metadata/{date}.json"
+        output: "data/intermediate/relationships/{date}.json"
+        depends_on: ["metadata_extractor"]
+        timeout: 240
+        retry: 1
+        optional: true
+
+      - name: "theme_synthesizer"
+        input:
+          - "data/intermediate/metadata/{date}.json"
+          - "data/intermediate/relationships/{date}.json"
+        output: "data/intermediate/themes/{date}.json"
+        depends_on: ["metadata_extractor"]
+        timeout: 200
+        retry: 2
+
+      - name: "recommendation_generator"
+        input: "data/intermediate/themes/{date}.json"
+        output: "data/intermediate/recommendations/{date}.json"
+        depends_on: ["theme_synthesizer"]
+        timeout: 180
+        retry: 2
+
+  - phase: "assembly"
+    description: "Compose the final brief"
+    agents:
+      - name: "brief_composer"
+        input:
+          - "data/intermediate/summaries/{date}.json"
+          - "data/intermediate/translations/{date}.json"
+          - "data/intermediate/themes/{date}.json"
+          - "data/intermediate/recommendations/{date}.json"
+        output: "data/intermediate/drafts/{date}.md"
+        depends_on: ["recommendation_generator"]
+        timeout: 300
+        retry: 2
+
+  - phase: "quality_assurance"
+    description: "Review for quality and compliance"
+    agents:
+      - name: "qa_reviewer"
+        input: "data/intermediate/drafts/{date}.md"
+        output: "telemetry/quality/qa_{date}.json"
+        depends_on: ["brief_composer"]
+        timeout: 400
+        retry: 1
+        critical: true  # Must pass
+        max_iterations: 3
+
+      - name: "terminology_compliance"
+        input: "data/intermediate/drafts/{date}.md"
+        output: "audit/compliance/terminology/{date}.json"
+        depends_on: ["brief_composer"]
+        timeout: 120
+        retry: 1
+        critical: false  # Warn only
+
+      - name: "fact_checker"
+        input: "data/intermediate/drafts/{date}.md"
+        output: "audit/compliance/fact_checks/{date}.json"
+        depends_on: ["brief_composer"]
+        timeout: 300
+        retry: 1
+        critical: true
+
+  - phase: "publication"
+    description: "Publish brief and manage archives"
+    agents:
+      - name: "final_formatter"
+        input: "data/intermediate/drafts/{date}.md"
+        output: "../website/content/briefs/{date}-secure-reasoning-brief.md"
+        depends_on: ["qa_reviewer", "fact_checker"]
+        timeout: 60
+        retry: 1
+
+      - name: "git_publisher"
+        input: "../website/content/briefs/{date}-secure-reasoning-brief.md"
+        output: "data/logs/git/{date}.log"
+        depends_on: ["final_formatter"]
+        timeout: 120
+        retry: 2
+        conditional: "PUBLISH_TO_GITHUB=true"
+
+      - name: "archive_manager"
+        input: "data/intermediate/**/{date}.*"
+        output: "data/intermediate/archives/{date}/"
+        depends_on: ["git_publisher"]
+        timeout: 180
+        retry: 1
+
+  - phase: "monitoring"
+    description: "Collect telemetry and generate audit reports"
+    agents:
+      - name: "performance_monitor"
+        input: "data/logs/**/{date}.*"
+        output: "telemetry/performance/{date}.json"
+        depends_on: ["archive_manager"]
+        timeout: 120
+        retry: 1
+        always_run: true
+
+      - name: "governance_auditor"
+        input:
+          - "data/logs/**/{date}.*"
+          - "data/intermediate/**/{date}.*"
+        output: "audit/reports/{date}_audit.json"
+        depends_on: ["archive_manager"]
+        timeout: 180
+        retry: 1
+        always_run: true
+
+error_handling:
+  on_agent_failure:
+    action: "retry"
+    max_retries: 3
+    retry_delay_seconds: 5
+
+  on_critical_failure:
+    action: "halt_pipeline"
+    notify: ["log", "console"]
+    save_state: true
+
+  on_optional_failure:
+    action: "log_and_continue"
+    notify: ["log"]
+
+  on_max_retries_exceeded:
+    action: "escalate_to_human"
+    notify: ["log", "console"]
+
+governance:
+  type_3_checks:
+    - phase: "discovery"
+      check: "input_sources_public"
+      enforcement: "strict"
+
+    - phase: "processing"
+      check: "inference_location_local"
+      enforcement: "strict"
+
+    - phase: "publication"
+      check: "output_is_derived_only"
+      enforcement: "strict"
+
+  audit_requirements:
+    capture_all_inputs: true
+    capture_all_outputs: true
+    capture_agent_decisions: true
+    capture_timestamps: true
+    capture_model_usage: true
+
+telemetry:
+  collect:
+    - "phase_duration"
+    - "agent_execution_time"
+    - "success_failure_rates"
+    - "retry_counts"
+    - "quality_scores"
+    - "token_usage"
+
+  output:
+    format: "jsonl"
+    location: "telemetry/metrics/pipeline_{date}.jsonl"
+
+performance_targets:
+  total_pipeline_time: 3600  # 60 minutes
+  per_article_processing: 120  # 2 minutes
+  quality_score_minimum: 7.0
+
+scheduling:
+  frequency: "weekly"
+  day: "Monday"
+  time: "09:00"
+  timezone: "America/New_York"
+
+  triggers:
+    - type: "cron"
+      expression: "0 9 * * 1"  # Every Monday at 9 AM
+
+    - type: "manual"
+      command: "scripts/run_weekly_brief.sh"
+
+    - type: "api"
+      endpoint: "/api/trigger-brief"
+      auth_required: true
+
+notifications:
+  on_success:
+    enabled: true
+    channels: ["log"]
+    message: "Weekly brief generated successfully"
+
+  on_failure:
+    enabled: true
+    channels: ["log", "console"]
+    message: "Pipeline failed: {reason}"
+
+  on_quality_issues:
+    enabled: true
+    channels: ["log"]
+    threshold: 7.0
+    message: "Brief quality below threshold: {score}"
+
+version: "1.0"
+last_updated: "2025-11-11"

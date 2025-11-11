@@ -1,0 +1,231 @@
+# Type III Secure Reasoning Compliance Configuration
+# Defines boundaries and enforcement rules for Type III operation
+
+type_3_definition:
+  name: "CARE-Enabled Insight Exchange"
+  principle: "Derived insights are shared across boundaries while original data stay local"
+
+  characteristics:
+    what_travels:
+      - "Final weekly briefs (markdown)"
+      - "High-level summaries"
+      - "Theme analysis"
+      - "Recommendations"
+      - "Attribution metadata"
+      - "Aggregated metrics (anonymized)"
+      - "Case studies (anonymized)"
+
+    what_stays_local:
+      - "Raw RSS feed content"
+      - "Individual article full text"
+      - "Intermediate JSON files"
+      - "Processing logs"
+      - "Model inference details"
+      - "Agent-to-agent communications"
+      - "Full audit trails"
+
+boundaries:
+  input_boundary:
+    name: "Public Source Ingestion"
+    rule: "Only public sources (RSS feeds, arXiv, public blogs) may enter"
+
+    allowed_sources:
+      - "arxiv.org"
+      - "alignmentforum.org"
+      - "blog.research.google"
+      - "openai.com/blog"
+      - "anthropic.com/news"
+
+    prohibited_sources:
+      - "Internal documents"
+      - "Private communications"
+      - "Proprietary data"
+      - "Personal information"
+
+    enforcement:
+      check_frequency: "per_article"
+      action_on_violation: "reject_and_log"
+      alert: true
+
+  processing_boundary:
+    name: "Local Processing Enforcement"
+    rule: "All AI inference must occur locally on Betty cluster via Ollama"
+
+    allowed_processing:
+      - endpoint: "http://192.168.1.10:11434/api/generate"
+        description: "Betty head node Ollama"
+      - endpoint: "http://localhost:11434/api/generate"
+        description: "Local Ollama (testing)"
+
+    prohibited_processing:
+      - "OpenAI API"
+      - "Anthropic API"
+      - "Google Gemini API"
+      - "Any external commercial AI service"
+
+    exceptions:
+      - condition: "Phase 2.0 ADK orchestration"
+        allowed: "Google ADK coordination (no data sent)"
+        requires_approval: true
+
+    enforcement:
+      check_frequency: "per_inference"
+      action_on_violation: "halt_pipeline"
+      alert: true
+      log_level: "CRITICAL"
+
+  output_boundary:
+    name: "Derived Insight Publication"
+    rule: "Only derived insights may be published; no raw or intermediate data"
+
+    allowed_outputs:
+      - type: "final_brief"
+        location: "../website/content/briefs/"
+        content: "Hugo markdown with summaries, themes, recommendations"
+
+      - type: "transparency_report"
+        location: "public/transparency/"
+        content: "Aggregated metrics, anonymized compliance data"
+
+      - type: "case_study"
+        location: "public/transparency/case-studies/"
+        content: "Anonymized teaching examples"
+
+      - type: "metrics_dashboard"
+        location: "public/transparency/metrics/"
+        content: "Public-facing analytics (aggregated only)"
+
+    prohibited_outputs:
+      - "Raw RSS feed content"
+      - "Full article text"
+      - "Intermediate JSON files"
+      - "Individual agent logs"
+      - "Complete audit trails"
+      - "Non-anonymized data"
+
+    enforcement:
+      check_frequency: "pre_publication"
+      action_on_violation: "block_publication"
+      alert: true
+      requires_review: true
+
+monitoring:
+  continuous_checks:
+    - check: "input_source_validation"
+      frequency: "per_article"
+      agent: "governance_auditor"
+
+    - check: "processing_location_verification"
+      frequency: "per_inference"
+      agent: "governance_auditor"
+
+    - check: "output_content_classification"
+      frequency: "pre_publication"
+      agent: "governance_auditor"
+
+    - check: "data_flow_tracing"
+      frequency: "continuous"
+      agent: "governance_auditor"
+
+  alerts:
+    boundary_violation:
+      severity: "CRITICAL"
+      action: "halt_pipeline"
+      notify: ["log", "console"]
+
+    suspicious_activity:
+      severity: "WARNING"
+      action: "log_and_continue"
+      notify: ["log"]
+
+audit_requirements:
+  every_article:
+    capture:
+      - "source_url"
+      - "retrieval_timestamp"
+      - "retrieval_agent"
+      - "processing_location"
+      - "all_agent_touches"
+      - "output_classification"
+
+  every_brief:
+    capture:
+      - "all_source_articles"
+      - "processing_timeline"
+      - "agent_decisions"
+      - "quality_scores"
+      - "type3_compliance_verification"
+
+  monthly:
+    generate:
+      - "compliance_report"
+      - "boundary_enforcement_summary"
+      - "data_flow_diagram"
+      - "type3_verification_certificate"
+
+care_principles_mapping:
+  collective_benefit:
+    implementation: "Insights shared publicly for community good"
+    verification: "Briefs published openly, no paywalls"
+
+  authority_to_control:
+    implementation: "All processing under RKL governance"
+    verification: "Local processing only, complete audit trail"
+
+  responsibility:
+    implementation: "Full audit trail and attribution"
+    verification: "Every brief includes provenance, sources, methods"
+
+  ethics:
+    implementation: "Transparent methods, no data exploitation"
+    verification: "Open documentation, Type III compliance reports"
+
+compliance_reporting:
+  frequency: "monthly"
+  output_location: "public/transparency/monthly-reports/"
+
+  includes:
+    - "Type III boundary verification"
+    - "CARE principles adherence"
+    - "Data flow audit summary"
+    - "Agent performance metrics"
+    - "Quality assurance statistics"
+
+  public: true  # Reports are published
+
+violations:
+  log_location: "data/logs/governance_events/violations.jsonl"
+
+  categories:
+    critical:
+      - "external_api_call"
+      - "raw_data_publication"
+      - "processing_boundary_breach"
+
+    major:
+      - "suspicious_source"
+      - "incomplete_attribution"
+      - "audit_gap"
+
+    minor:
+      - "formatting_issue"
+      - "metadata_incomplete"
+
+  response_plan:
+    critical:
+      action: "halt_pipeline"
+      notify: "immediate"
+      requires: "human_investigation"
+
+    major:
+      action: "flag_for_review"
+      notify: "daily_digest"
+      requires: "human_review_before_publish"
+
+    minor:
+      action: "log_and_continue"
+      notify: "weekly_summary"
+      requires: "automated_fix"
+
+version: "1.0"
+last_updated: "2025-11-11"

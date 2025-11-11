@@ -1,0 +1,146 @@
+# RKL Logging Configuration
+# Controls research data collection for AI science
+
+logging:
+  enabled: true
+  base_dir: "./data/research"
+  rkl_version: "1.0"
+  batch_size: 100  # Records to buffer before writing
+  validate_schema: true
+  auto_manifest: true
+
+# Type III compliance tracking
+type3_enforcement:
+  enabled: true
+  log_boundary_checks: true
+  alert_on_violation: true
+
+# Sampling rates per artifact (0.0 = disabled, 1.0 = all records)
+sampling:
+  # Phase 0 - Always capture (100%)
+  execution_context: 1.0      # Model hyperparameters
+  agent_graph: 1.0            # Agent-to-agent messages
+  boundary_events: 1.0        # Type III violations
+  governance_ledger: 1.0      # Publication traceability
+
+  # Phase 1 - Selective capture (coming soon)
+  reasoning_traces: 0.05      # 5% - expensive full traces
+  retrieval_provenance: 0.10  # 10% - document lookups
+  quality_trajectories: 1.0   # 100% - quality evolution
+
+  # Phase 2 - Sparse capture (future)
+  hallucination_matrix: 1.0   # 100% - critical for safety
+  failure_snapshots: 0.05     # 5% - deep failure analysis
+  human_interventions: 1.0    # 100% - all human touchpoints
+
+# Privacy settings for different release tiers
+privacy:
+  internal:
+    level: "full"
+    description: "Complete data with all fields"
+    access: "restricted"
+
+  research:
+    level: "sanitized"
+    description: "Hashed sensitive fields, full structure"
+    access: "researchers_only"
+    sanitize_fields:
+      - "prompt_text"
+      - "input_text"
+      - "output_text"
+      - "raw_content"
+
+  public:
+    level: "anonymized"
+    description: "Only structural/statistical fields"
+    access: "public"
+    keep_fields:
+      - "session_id"
+      - "agent_id"
+      - "model_id"
+      - "temp"
+      - "gen_tokens"
+      - "tool_lat_ms"
+      - "timestamp"
+
+# Manifest generation
+manifest:
+  enabled: true
+  frequency: "daily"
+  output_dir: "./data/manifests"
+  include:
+    - "row_counts"
+    - "schema_versions"
+    - "data_quality_stats"
+
+# Storage format
+storage:
+  preferred: "parquet"  # or "ndjson"
+  compression: "snappy"
+  partitioning:
+    - "artifact_type"
+    - "year"
+    - "month"
+    - "day"
+
+# Monitoring & alerts
+monitoring:
+  enabled: true
+  metrics:
+    - "rows_per_artifact"
+    - "write_latency_ms"
+    - "batch_sizes"
+    - "validation_errors"
+
+  alerts:
+    - condition: "validation_error_rate > 0.01"
+      severity: "warning"
+      action: "log"
+
+    - condition: "boundary_violation"
+      severity: "critical"
+      action: "halt_pipeline"
+
+# Research dataset releases
+releases:
+  schedule: "quarterly"
+  next_release: "2026-Q1"
+  version_format: "vYYYY.Q"
+
+  tiers:
+    - name: "internal-full"
+      privacy_level: "internal"
+      audience: "RKL staff only"
+
+    - name: "research-sanitized"
+      privacy_level: "research"
+      audience: "Academic researchers (upon request)"
+
+    - name: "public-benchmark"
+      privacy_level: "public"
+      audience: "Open to all"
+      repositories:
+        - "Hugging Face Datasets"
+        - "arXiv"
+        - "GitHub Releases"
+
+# CARE principles metadata
+care_metadata:
+  collective_benefit:
+    enabled: true
+    description: "Data shared for community advancement"
+
+  authority_to_control:
+    enabled: true
+    description: "All processing under local governance"
+
+  responsibility:
+    enabled: true
+    description: "Complete audit trail maintained"
+
+  ethics:
+    enabled: true
+    description: "Transparent methods, privacy-preserving"
+
+version: "1.0"
+last_updated: "2025-11-11"
