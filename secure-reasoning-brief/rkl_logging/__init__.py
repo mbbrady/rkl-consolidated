@@ -34,7 +34,7 @@ License: Apache 2.0
 __version__ = "1.0.0"
 __author__ = "Resonant Knowledge Lab"
 
-from .logging import StructuredLogger
+from .structured_logger import StructuredLogger
 from .utils.hashing import sha256_text, sha256_dict, sha256_file
 from .schemas import SCHEMAS, validate_record
 from .utils.privacy import sanitize_for_research, anonymize_for_public

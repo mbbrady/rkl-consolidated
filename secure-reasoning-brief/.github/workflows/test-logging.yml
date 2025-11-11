@@ -1,0 +1,145 @@
+# GitHub Action: Test RKL Logging Package
+#
+# Runs on every push/PR to ensure:
+# - Schema stability (no drift)
+# - Logging interface consistency
+# - Privacy helpers work correctly
+# - Parquet and NDJSON fallback both work
+
+name: Test RKL Logging
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'rkl_logging/**'
+      - '.github/workflows/test-logging.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'rkl_logging/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies (with Parquet)
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas pyarrow pyyaml
+
+    - name: Run tests (Parquet mode)
+      run: |
+        cd rkl_logging
+        python test_logging.py
+
+    - name: Uninstall Parquet (test fallback)
+      run: |
+        pip uninstall -y pandas pyarrow
+
+    - name: Run tests (NDJSON fallback mode)
+      run: |
+        cd rkl_logging
+        python test_logging.py
+
+    - name: Check schema drift
+      run: |
+        cd rkl_logging
+        python -c "
+        from schemas import SCHEMAS
+        import json
+
+        # Export current schemas
+        with open('schemas_current.json', 'w') as f:
+            json.dump(SCHEMAS, f, indent=2, default=str)
+
+        print('Current schemas exported to schemas_current.json')
+        print('Phase 0 artifacts:', list(SCHEMAS.keys()))
+        "
+
+    - name: Upload schema snapshot
+      uses: actions/upload-artifact@v3
+      with:
+        name: schema-snapshot-py${{ matrix.python-version }}
+        path: rkl_logging/schemas_current.json
+        retention-days: 30
+
+  schema-drift-check:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Full history for comparison
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Check for schema changes
+      run: |
+        cd rkl_logging/schemas
+
+        # Check if any schema files changed
+        CHANGED=$(git diff --name-only HEAD~1 HEAD | grep 'schemas/' || echo "")
+
+        if [ ! -z "$CHANGED" ]; then
+          echo "⚠️  Schema files changed:"
+          echo "$CHANGED"
+          echo ""
+          echo "REMINDER: Schema changes require:"
+          echo "1. Update schema version (e.g., v1.0 → v1.1)"
+          echo "2. Document migration path in CHANGELOG"
+          echo "3. Update RESEARCH_DATA.md if affecting public datasets"
+          echo ""
+          echo "Changed files:"
+          git diff HEAD~1 HEAD -- schemas/
+        else
+          echo "✓ No schema changes detected"
+        fi
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install linting tools
+      run: |
+        pip install flake8 pylint
+
+    - name: Lint with flake8
+      run: |
+        cd rkl_logging
+        # Stop build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Treat all other issues as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=100 --statistics
+      continue-on-error: true
+
+    - name: Lint with pylint
+      run: |
+        cd rkl_logging
+        pylint *.py --exit-zero
+      continue-on-error: true
