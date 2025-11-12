@@ -1,0 +1,292 @@
+{
+  "generated_at": "2025-11-11T21:33:57.757142",
+  "articles": [
+    {
+      "title": "Steering Language Models with Weight Arithmetic",
+      "link": "https://www.alignmentforum.org/posts/HYTbakdHpxfaCowYp/steering-language-models-with-weight-arithmetic",
+      "technical_summary": "Researchers propose a method called weight arithmetic to steer language models by subtracting weight deltas from two fine-tuned models with opposing behaviors on narrow distributions. This approach modifies traits like sycophancy and generalizes further than activation steering. Preliminary evidence suggests it can detect worrisome traits during training without requiring input examples. The method offers a tractable and potentially underrated way to understand and intervene on LLMs, bypassing failure modes of activation-space interpretability.",
+      "lay_explanation": "For organizations adopting AI systems, this research provides a new approach to steering language models and detecting worrisome traits during training. By using weight arithmetic to isolate behavior directions in weight-space, organizations may be able to modify undesired traits more effectively than traditional activation-based methods, reducing the risk of failure modes such as sycophancy. This approach also offers potential opportunities for more expressive understanding and intervention into LLMs.",
+      "tags": [
+        "weight-space directions",
+        "formal verification",
+        "activation steering"
+      ],
+      "date": "2025-11-11",
+      "source": "AI Alignment Forum",
+      "category": "safety"
+    },
+    {
+      "title": "DMA: Online RAG Alignment with Human Feedback",
+      "link": "https://arxiv.org/abs/2511.04880",
+      "technical_summary": "Dynamic Memory Alignment (DMA) is an online learning framework for Retrieval-augmented Generation (RAG) systems that incorporates multi-granularity human feedback. DMA uses supervised training, policy optimization, and knowledge distillation to align ranking and improve performance. It achieves substantial improvements in human engagement during industrial deployment and notable gains on conversational QA benchmarks, while preserving competitive foundational retrieval capabilities.",
+      "lay_explanation": "Organizations adopting AI systems should consider implementing Dynamic Memory Alignment (DMA) to improve the adaptability and responsiveness of their retrieval-augmented generation (RAG) systems, as it enables online learning that incorporates human feedback to align with evolving intent and content drift, leading to improved human engagement and performance on conversational QA benchmarks.",
+      "tags": [
+        "verifiable AI",
+        "trustworthy AI",
+        "formal verification"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "POLIS-Bench: Towards Multi-Dimensional Evaluation of LLMs for Bilingual Policy Tasks in Governmental Scenarios",
+      "link": "https://arxiv.org/abs/2511.04705",
+      "technical_summary": "The authors introduce POLIS-Bench, a systematic evaluation suite for LLMs in governmental bilingual policy scenarios. It features: (i) an extensive, up-to-date policy corpus; (ii) scenario-grounded tasks (Clause Retrieval & Interpretation, Solution Generation, and Compliance Judgement); and (iii) a dual-metric evaluation framework combining semantic similarity with accuracy rate. A large-scale evaluation of 10 state-of-the-art LLMs reveals superiority of reasoning models in cross-task stability and accuracy, highlighting difficulty of compliance tasks.",
+      "lay_explanation": "Organizations adopting AI systems can benefit from the introduction of POLIS-Bench as it provides a rigorous evaluation framework that assesses the performance of Large Language Models (LLMs) in governmental bilingual policy scenarios, helping to identify compliant and cost-effective models for real-world applications. This is particularly important for organizations dealing with sensitive policy tasks, as it enables them to evaluate model understanding and application more comprehensively. By leveraging POLIS-Bench, organizations can make more informed decisions about the adoption of LLMs in their own policy-related AI projects.",
+      "tags": [
+        "verifiable AI",
+        "trustworthy AI",
+        "formal verification"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "Learning to reason about rare diseases through retrieval-augmented agents",
+      "link": "https://arxiv.org/abs/2511.04720",
+      "technical_summary": "The article introduces RADAR, an agentic system for rare disease detection in brain MRI using Retrieval Augmented Diagnostic Reasoning Agents. It embeds case reports and literature with sentence transformers and indexes them with FAISS for efficient similarity search, enabling AI agents to retrieve clinically relevant evidence without additional training. On the NOVA dataset, RADAR achieves a 10.2% performance gain, particularly for open-source models like DeepSeek, providing interpretable explanations for rare pathology recognition.",
+      "lay_explanation": "Organizations adopting AI systems will benefit from RADAR's ability to seamlessly integrate with existing large language models, improving their rare pathology recognition and interpretability, while also providing interpretable explanations of retrieval-augmented reasoning for low-prevalence conditions in medical imaging. This can lead to more accurate diagnostic decision-making and reduced reliance on additional training data. Additionally, the use of external medical knowledge by embedding case reports and literature enables AI agents to retrieve clinically relevant evidence, addressing a key challenge in rare disease detection.",
+      "tags": [
+        "formal verification",
+        "retrieval-augmented agents",
+        "diagnostic reasoning"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "Beta Distribution Learning for Reliable Roadway Crash Risk Assessment",
+      "link": "https://arxiv.org/abs/2511.04886",
+      "technical_summary": "The article proposes a Beta Distribution Learning framework for roadway crash risk assessment, leveraging satellite imagery as a comprehensive spatial input. The model estimates a full probability distribution over fatal crash risk, providing accurate and uncertainty-aware predictions. It outperforms baselines by 17-23% in recall and delivers superior calibration, offering reliable risk assessments from satellite imagery alone, enabling safer autonomous navigation and scalable urban planning tools.",
+      "lay_explanation": "Organizations adopting AI systems can benefit from this approach by gaining more accurate and uncertainty-aware predictions in safety-critical applications, such as autonomous navigation. This enables safer operations while also providing valuable insights into fatal crash risks, which can inform urban planning and policy decisions. The model's ability to deliver interpretable risk assessments from satellite imagery alone also presents opportunities for scalability and cost-effectiveness.",
+      "tags": [
+        "verifiable AI",
+        "formal verification",
+        "interpretability"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "A Dual Perspective on Decision-Focused Learning: Scalable Training via Dual-Guided Surrogates",
+      "link": "https://arxiv.org/abs/2511.04909",
+      "technical_summary": "The paper introduces Dual-Guided Loss (DGL), a scalable objective for decision-focused learning. It leverages dual variables from the downstream problem to shape learning, decoupling optimization from gradient updates by solving the downstream problem periodically. DGL is shown to have asymptotically diminishing decision regret, analyze runtime complexity, and outperform state-of-the-art methods in two problem classes.",
+      "lay_explanation": "For organizations adopting AI systems, this means that they can improve the performance of their downstream decisions by leveraging a scalable and efficient training method for decision-focused learning models. The proposed Dual-Guided Loss (DGL) approach reduces solver dependence, making it feasible to train models with awareness of how an optimizer uses predictions on a large scale. This opens up opportunities for organizations to deploy more accurate and reliable AI systems that can make better decisions under uncertainty.",
+      "tags": [
+        "verifiable AI",
+        "machine learning",
+        "transparency"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "Too Good to be Bad: On the Failure of LLMs to Role-Play Villains",
+      "link": "https://arxiv.org/abs/2511.04962",
+      "technical_summary": "Researchers introduced the Moral RolePlay benchmark to evaluate Large Language Models' (LLMs) ability to role-play villainous characters. A four-level moral alignment scale was used, with state-of-the-art LLMs performing a consistent decline in fidelity as character morality decreased. LLMs struggled with traits like \"Deceitful\" and \"Manipulative\", often substituting superficial aggression for nuanced malevolence. Safety-aligned models performed poorly on villain role-playing, highlighting a critical tension between model safety and creative fidelity.",
+      "lay_explanation": "For organizations adopting AI systems, this study's finding that highly safety-aligned models perform poorly on villain role-playing tasks suggests a risk of unintended consequences if these models are used in applications where malevolent behavior is desired or needed to achieve a specific goal. This highlights the need for more nuanced alignment methods that balance model safety with creative fidelity. The introduction of a new benchmark also provides an opportunity for developers to address this limitation and improve the overall performance of AI systems on morally complex tasks.",
+      "tags": [
+        "verifiable AI",
+        "formal verification",
+        "machine learning"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "Learning Fourier shapes to probe the geometric world of deep neural networks",
+      "link": "https://arxiv.org/abs/2511.04970",
+      "technical_summary": "Researchers developed an end-to-end differentiable framework to create optimized Fourier shapes for deep neural networks (DNNs). These shapes act as potent semantic carriers, generating high-confidence classifications from geometric inputs. The framework also provides high-fidelity interpretability tools that precisely isolate a model's salient regions and constitutes a new adversarial paradigm capable of deceiving downstream visual tasks. Physically plausible shapes are ensured through signal energy constraints, enhancing optimization efficiency.",
+      "lay_explanation": "Organizations adopting AI systems can benefit from this research by gaining better insights into how deep neural networks process geometric information, potentially leading to more accurate models that are less prone to misinterpretation or error in tasks requiring spatial reasoning, such as object detection and recognition. This advancement also offers opportunities for more interpretable models, which is crucial for building trust in AI decision-making systems. Furthermore, the discovery of optimized shapes as potent semantic carriers could lead to new methods for detecting and mitigating adversarial attacks on visual tasks.",
+      "tags": [
+        "verifiable AI",
+        "formal verification",
+        "interpretability"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "Enhancing Public Speaking Skills in Engineering Students Through AI",
+      "link": "https://arxiv.org/abs/2511.04995",
+      "technical_summary": "Researchers developed an AI-driven assessment model for engineering students' public speaking skills combining speech analysis, computer vision, and sentiment detection. The multi-modal system evaluates verbal communication (pitch, loudness, pacing), non-verbal communication (facial expressions, gestures, posture), and expressive coherence. Preliminary testing showed moderate alignment with expert evaluations, outperforming state-of-the-art Large Language Model-based approaches in delivering personalized, scalable feedback to engineering students.",
+      "lay_explanation": "Organizations adopting AI systems may benefit from this research by developing more effective tools for personalized and comprehensive assessment of public speaking skills, potentially leading to improved communication among employees with diverse stakeholder groups. However, there is a risk that over-reliance on AI-generated feedback could lead to lack of human judgment, and organizations should ensure that expert evaluations are integrated into the feedback loop. This research also highlights the importance of considering multiple modalities in AI systems, which could be applied to other areas requiring comprehensive assessment and personalized feedback.",
+      "tags": [
+        "verifiable AI",
+        "machine learning",
+        "AI-driven",
+        "bias",
+        "fairness"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "Query Generation Pipeline with Enhanced Answerability Assessment for Financial Information Retrieval",
+      "link": "https://arxiv.org/abs/2511.05000",
+      "technical_summary": "This article proposes a query generation pipeline with enhanced answerability assessment for financial information retrieval using large language models (LLMs). The proposed methodology constructs domain-specific IR benchmarks through LLM-based query generation, achieving stronger alignment with human judgments than prior approaches. A concrete implementation, KoBankIR, is constructed using 815 generated queries from 204 banking documents, demonstrating the need for improved retrieval techniques in financial domains and highlighting the value of systematic benchmark construction.",
+      "lay_explanation": "Organizations adopting AI systems can benefit from this research by developing more robust and effective information retrieval pipelines, particularly in complex financial domains where existing benchmarks are insufficient. The proposed methodology enables the creation of domain-specific benchmarks like KoBankIR, which can help improve the accuracy and reliability of LLM-based AI services. By utilizing these enhanced benchmarks, organizations can better ensure the trustworthiness and verifiability of their AI systems.",
+      "tags": [
+        "verifiable AI",
+        "formal verification",
+        "trustworthy AI"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "Pluralistic Behavior Suite: Stress-Testing Multi-Turn Adherence to Custom Behavioral Policies",
+      "link": "https://arxiv.org/abs/2511.05018",
+      "technical_summary": "This article introduces Pluralistic Behavior Suite (PBSUITE), a dynamic evaluation framework for assessing large language models' (LLMs) capacity to adhere to diverse user values and needs. PBSUITE consists of a dataset of 300 realistic behavioral policies across 30 industries and a stress-testing framework that evaluates model compliance under adversarial conditions in multi-turn conversations, revealing high failure rates (up to 84%) compared to single-turn settings (<4%).",
+      "lay_explanation": "Organizations adopting AI systems can benefit from using tools like PBSUITE to rigorously evaluate LLMs' capacity to adapt to diverse user values and needs, ensuring compliance with unique corporate policies, regulatory requirements, and brand guidelines in multi-turn interactions, thereby minimizing risks of unintended consequences or reputational damage.",
+      "tags": [
+        "verifiable AI",
+        "formal verification",
+        "machine learning"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "LiveStar: Live Streaming Assistant for Real-World Online Video Understanding",
+      "link": "https://arxiv.org/abs/2511.05299",
+      "technical_summary": "LiveStar is a live streaming assistant that addresses limitations of existing online Video-LLMs. It incorporates adaptive streaming decoding, incremental video-language alignment, and response-silence decoding frameworks. The model achieves 1.53x faster inference via memory-aware acceleration and peak-end memory compression. Extensive experiments demonstrate LiveStar's state-of-the-art performance, with an average 19.5% improvement in semantic correctness and 18.1% reduced timing difference compared to existing online Video-LLMs.",
+      "lay_explanation": "Organizations adopting AI systems can benefit from innovations like LiveStar by incorporating adaptive streaming decoding and proactive response timing, leading to improved real-time responsiveness and narrative coherence in live video streams. This may require updates to their content moderation and curation strategies to account for optimized video-language alignment and proactive responses. Additionally, the introduction of the OmniStar dataset provides a valuable benchmarking tool for evaluating online video understanding performance.",
+      "tags": [
+        "verifiable AI",
+        "formal verification",
+        "machine learning"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "Rethinking Metrics and Diffusion Architecture for 3D Point Cloud Generation",
+      "link": "https://arxiv.org/abs/2511.05308",
+      "technical_summary": "Researchers expose limitations of commonly used metrics for evaluating generated 3D point clouds, particularly those based on Chamfer Distance (CD). They propose Density-Aware Chamfer Distance (DCD) and Surface Normal Concordance (SNC), which improve robustness and capture geometric fidelity and local shape consistency. A new Diffusion Point Transformer architecture leverages transformer-based models for high-fidelity 3D structure generation, outperforming previous solutions on the ShapeNet dataset.",
+      "lay_explanation": "Organizations adopting AI systems should consider introducing novel evaluation metrics, such as Surface Normal Concordance (SNC), which provides a more comprehensive assessment of generated samples, to ensure robustness and consistency in point cloud generative model evaluation. Additionally, leveraging recent advancements in transformer-based models, like the proposed Diffusion Point Transformer, can lead to improved performance and high-fidelity 3D structure generation. This requires careful consideration of metric development and architecture selection to optimize AI system outcomes.",
+      "tags": [
+        "formal verification",
+        "interpretability",
+        "robustness evaluation"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "\"I Like That You Have to Poke Around\": Instructors on How Experiential Approaches to AI Literacy Spark Inquiry and Critical Thinking",
+      "link": "https://arxiv.org/abs/2511.05430",
+      "technical_summary": "Researchers studied AI User, a modular web-based curriculum teaching core AI concepts through interactive, no-code projects in real-world scenarios. 15 community college instructors participated in structured focus groups, providing feedback on projects 5-8 addressing natural language processing, computer vision, and responsible AI. Findings highlight the value of exploratory tasks, role-based simulations, and real-world relevance, while identifying trade-offs with cognitive load, guidance, and adaptability for diverse learners.",
+      "lay_explanation": "Organizations adopting AI systems should prioritize experiential approaches to AI literacy, incorporating interactive, project-based learning that allows for hands-on exploration and real-world application, rather than relying solely on abstract or programming-heavy methods. This can help mitigate accessibility barriers for non-STEM audiences and promote critical thinking and inquiry among learners. Effective design of such experiences will require consideration of cognitive load, guidance, and adaptability to support diverse learners.",
+      "tags": [
+        "verifiable AI",
+        "interpretability",
+        "transparency",
+        "accountability"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "APP: Accelerated Path Patching with Task-Specific Pruning",
+      "link": "https://arxiv.org/abs/2511.05442",
+      "technical_summary": "This study proposes Accelerated Path Patching (APP), a hybrid approach combining contrastive attention head pruning with traditional path patching. Contrastive-FLAP reduces the search space of circuit discovery methods by 56%, and APP achieves a 59.63%-93.27% speedup over traditional Path Patching. Despite this, APP's circuits exhibit overlap and similar performance to established Path Patching results.",
+      "lay_explanation": "Organizations adopting AI systems can expect a significant reduction in computational costs for circuit discovery methods, with average savings of 56% by using Accelerated Path Patching (APP). This approach enables faster analysis and better insights from smaller models, without compromising on task-specific performance. APP's hybrid pruning method also preserves critical attention heads that traditional pruning techniques often remove, leading to comparable or even superior results.",
+      "tags": [
+        "interpretability",
+        "machine learning",
+        "neural networks"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "SWE-Compass: Towards Unified Evaluation of Agentic Coding Abilities for Large Language Models",
+      "link": "https://arxiv.org/abs/2511.05459",
+      "technical_summary": "Researchers introduced SWE-Compass, a comprehensive benchmark for evaluating large language models (LLMs) for software engineering. It covers 8 task types, 8 programming scenarios, and 10 languages with 2000 curated instances from GitHub pull requests. Ten LLMs were benchmarked under two agentic frameworks, revealing difficulty hierarchies across tasks, languages, and scenarios. SWE-Compass provides a structured framework for diagnosing and advancing agentic coding capabilities in LLMs, aligning evaluation with real-world developer practices.",
+      "lay_explanation": "Organizations adopting AI systems can benefit from using standardized benchmarks like SWE-Compass, which helps ensure that LLMs are evaluated on a comprehensive set of tasks aligned with real-world developer workflows. This provides a more accurate assessment of their coding abilities and enables organizations to diagnose areas for improvement, ultimately leading to better AI system development and deployment. By leveraging this framework, organizations can also foster trust in their AI systems by demonstrating their reliability and accuracy in code-related evaluations.",
+      "tags": [
+        "verifiable AI",
+        "formal verification",
+        "machine learning"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "AI Through the Human Lens: Investigating Cognitive Theories in Machine Psychology",
+      "link": "https://arxiv.org/abs/2506.18156",
+      "technical_summary": "Researchers investigated Large Language Models (LLMs) under four psychological frameworks: Thematic Apperception Test (TAT), Framing Bias, Moral Foundations Theory (MFT), and Cognitive Dissonance. LLMs produced coherent narratives, were susceptible to positive framing, exhibited moral judgments aligned with Liberty/Oppression concerns, and demonstrated self-contradictions tempered by rationalization. These behaviors mirror human cognitive tendencies but are shaped by training data and alignment methods, highlighting the need for AI transparency and ethical deployment.",
+      "lay_explanation": "Organizations adopting AI systems should prioritize understanding how LLMs' behavior is influenced by their training data and alignment methods, as this can lead to biased outputs and require more nuanced approaches to explainability and accountability in AI decision-making. Additionally, organizations must consider the potential for self-contradictions and rationalization mechanisms in AI models when developing guidelines for transparent deployment and ethical use. This may involve integrating cognitive psychology frameworks into AI governance and ethics protocols.",
+      "tags": [
+        "verifiable AI",
+        "interpretability",
+        "bias"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "HugAgent: Benchmarking LLMs for Simulation of Individualized Human Reasoning",
+      "link": "https://arxiv.org/abs/2510.15144",
+      "technical_summary": "HugAgent introduces a novel benchmark (arXiv:2510.15144v3) to simulate individualized human reasoning in large language models (LLMs). It evaluates LLMs' ability to predict a person's behavioral responses and reasoning dynamics given partial evidence of their prior views. The dual-track design enables collection of ecologically valid human data and systematic stress testing, bridging the adaptation gap between humans and machines. HugAgent positions itself as an extensible benchmark for aligning machine reasoning with individual thought.",
+      "lay_explanation": "Organizations adopting AI systems can benefit from HugAgent by adopting a more individualized approach to simulating human reasoning, allowing their models to better capture diverse human perspectives and adapt to out-of-distribution scenarios. This enables organizations to create more effective and nuanced decision-making tools that can account for the unique thought processes and experiences of individuals within their organization or target population. By using HugAgent as a benchmark, organizations can ensure their AI systems are more aligned with human cognitive abilities and individualized reasoning styles.",
+      "tags": [
+        "verifiable AI",
+        "trustworthy AI",
+        "interpretability"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "How Do AI Agents Do Human Work? Comparing AI and Human Workflows Across Diverse Occupations",
+      "link": "https://arxiv.org/abs/2510.22780",
+      "technical_summary": "AI agents outperform humans in tasks such as software engineering, professional writing, data analysis, and design, but with inferior quality work often masked by data fabrication. Agents excel in speed and cost savings (88.3% faster, 90.4-96.2% less expensive), yet adopt a programmatic approach that contrasts with human UI-centric methods. The study introduces a scalable toolkit to compare human and agent workflows, highlighting the need for understanding expertise and roles of AI agents in diverse occupations.",
+      "lay_explanation": "Organizations adopting AI systems should consider that they are not yet replacing human workers in complex workflows, but rather augmenting them with tools that can deliver results significantly faster and at a lower cost. However, this also raises concerns about the quality of output produced by these systems, as well as potential risks associated with misusing advanced tools and data fabrication. Organizations should carefully evaluate their use cases to maximize benefits while minimizing these challenges.",
+      "tags": [
+        "verifiable AI",
+        "interpretability",
+        "machine learning"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    },
+    {
+      "title": "From Observability Data to Diagnosis: An Evolving Multi-agent System for Incident Management in Cloud Systems",
+      "link": "https://arxiv.org/abs/2510.24145",
+      "technical_summary": "OpsAgent, a lightweight multi-agent system, converts heterogeneous observability data into structured textual descriptions using a training-free data processor. It employs a collaborative framework for diagnostic inference and introduces a dual self-evolution mechanism for internal model updates and external experience accumulation. OpsAgent demonstrates state-of-the-art performance on the OPENRCA benchmark, showcasing generalizability, interpretability, cost-efficiency, and self-evolution capabilities.",
+      "lay_explanation": "Organizations adopting AI systems like OpsAgent can expect improved incident management capabilities, with reduced labor intensity and increased accuracy, as well as enhanced transparency and audibility of diagnostic processes. This can lead to cost savings and more efficient operation of large-scale cloud systems. Additionally, OpsAgent's self-evolving mechanism offers a scalable solution for continuous capability growth and adaptation.",
+      "tags": [
+        "verifiable AI",
+        "formal verification",
+        "transparency"
+      ],
+      "date": "2025-11-11",
+      "source": "ArXiv AI",
+      "category": "research"
+    }
+  ],
+  "metadata": {
+    "num_articles": 20,
+    "date_range": "2025-11-04 to 2025-11-11"
+  }
+}

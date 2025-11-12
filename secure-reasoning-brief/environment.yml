@@ -1,0 +1,42 @@
+name: rkl-briefs
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  # Python
+  - python=3.11
+
+  # Core dependencies
+  - pip
+  - python-dotenv>=1.0.0
+  - pyyaml>=6.0
+  - requests>=2.31.0
+  - feedparser>=6.0.10
+
+  # Data processing (optimized conda builds)
+  - pandas>=2.0.0
+  - pyarrow>=12.0.0
+
+  # Development tools
+  - ipython
+  - pytest
+
+  # Optional: Jupyter for data exploration
+  - jupyter
+  - notebook
+
+  # Pip-only packages (if any)
+  - pip:
+    - python-dotenv  # Ensure latest version
+
+# Environment creation:
+# conda env create -f environment.yml
+#
+# Activation:
+# conda activate rkl-briefs
+#
+# Update:
+# conda env update -f environment.yml --prune
+#
+# Export (for reproducibility):
+# conda env export --no-builds > environment.lock.yml
