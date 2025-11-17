@@ -1,7 +1,7 @@
 """
 Core StructuredLogger implementation.
 
-Lightweight, async structured logger with:
+Lightweight structured logger with:
 - Batched writes to Parquet or NDJSON
 - Date/artifact partitioning
 - Automatic manifest generation
@@ -11,6 +11,7 @@ Lightweight, async structured logger with:
 
 import json
 import os
+import hashlib
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, Optional, List
@@ -31,7 +32,7 @@ class StructuredLogger:
     Structured logger for RKL agentic system.
 
     Features:
-    - Async batched writes (configurable batch size)
+    - Batched writes (configurable batch size)
     - Parquet (preferred) or NDJSON (fallback)
     - Date/artifact partitioning
     - Schema validation (optional)
@@ -207,7 +208,11 @@ class StructuredLogger:
     def _write_parquet(self, file_path: Path, records: List[Dict]) -> None:
         """Write records to Parquet file."""
         df = pd.DataFrame(records)
-        df.to_parquet(file_path, index=False, engine="pyarrow")
+        try:
+            df.to_parquet(file_path, index=False, engine="pyarrow")
+        except ImportError:
+            # Fallback to default engine if pyarrow not available
+            df.to_parquet(file_path, index=False)
 
     def _write_ndjson(self, file_path: Path, records: List[Dict]) -> None:
         """Write records to NDJSON file."""
@@ -243,7 +248,7 @@ class StructuredLogger:
     def _generate_manifest(self) -> None:
         """Generate daily manifest with statistics."""
         today = datetime.utcnow().strftime("%Y-%m-%d")
-        manifest_dir = self.base_dir / ".." / "manifests"
+        manifest_dir = self.base_dir / "manifests"
         manifest_dir.mkdir(parents=True, exist_ok=True)
 
         manifest_path = manifest_dir / f"{today}.json"
@@ -263,7 +268,7 @@ class StructuredLogger:
         }
 
         with open(manifest_path, "w") as f:
-            json.dumps(manifest, indent=2)
+            f.write(json.dumps(manifest, indent=2))
 
     def get_stats(self) -> Dict[str, Dict[str, int]]:
         """Get logging statistics."""
@@ -272,6 +277,5 @@ class StructuredLogger:
 
 # Convenience function
 def sha256_text(text: str) -> str:
-    """Convenience re-export of hashing function."""
-    from .utils.hashing import sha256_text as _sha256
-    return _sha256(text)
+    """Generate SHA-256 hash of text for privacy-preserving content fingerprinting."""
+    return hashlib.sha256(text.encode('utf-8')).hexdigest()

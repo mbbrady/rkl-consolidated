@@ -11,12 +11,12 @@ BOUNDARY_EVENTS_SCHEMA = {
     ],
 
     "optional_fields": [
-        "context_tag", "reviewer", "severity", "blocked_content_hash"
+        "session_id", "t", "context_tag", "reviewer", "severity", "blocked_content_hash"
     ],
 
     "field_types": {
-        "event_id": str, "timestamp": str, "agent_id": str,
-        "rule_id": str, "trigger_tag": str, "context_tag": str,
+        "event_id": str, "timestamp": str, "t": int, "session_id": str,
+        "agent_id": str, "rule_id": str, "trigger_tag": str, "context_tag": str,
         "action": str, "reviewer": str, "severity": str,
         "blocked_content_hash": str
     },

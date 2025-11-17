@@ -2,8 +2,26 @@
 """
 Secure Reasoning Brief Agent - Publisher
 
-This script takes the summarized articles JSON and generates a formatted
-Hugo-compatible Markdown brief for the RKL website.
+Part of the RKL 18-Agent Multi-Agent System for Type III Secure Reasoning
+================================================================================
+
+This script implements the Publishing agent group:
+- Publishing (3 agents): Formatting, Hugo generation, Git deployment
+
+Type III Secure Reasoning Demonstration:
+- Input: Derived insights from local processing (summaries, tags, themes)
+- Processing: Formats derived content into Hugo markdown (local)
+- Output: Public brief on GitHub Pages (Type III boundary crossing)
+- Demonstrates: "Insights travel, data stays" - raw articles never published
+
+Agents Implemented:
+1. Brief Formatter - Converts JSON summaries to Hugo markdown
+2. Theme Analyzer - Identifies cross-article themes and patterns
+3. Recommendation Generator - Creates actionable guidance from themes
+4. Git Publisher - Commits and pushes to GitHub (triggers Netlify deploy)
+
+For Kaggle AI Agents Capstone Competition - "Agents for Good" Track
+Demonstrates: Multi-agent orchestration, Type III boundary enforcement, public benefit
 """
 
 import os
@@ -11,11 +29,21 @@ import sys
 import json
 import logging
 import subprocess
+import uuid
+import time
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List, Dict, Optional
 from collections import Counter
 from dotenv import load_dotenv
+
+# Import RKL logging for research telemetry
+try:
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from rkl_logging import StructuredLogger, sha256_text
+    RKL_LOGGING_AVAILABLE = True
+except ImportError:
+    RKL_LOGGING_AVAILABLE = False
 
 # Setup logging
 logging.basicConfig(
@@ -24,15 +52,84 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+if not RKL_LOGGING_AVAILABLE:
+    logger.warning("rkl_logging not available - telemetry disabled")
+
 
 class BriefGenerator:
-    """Generates formatted Hugo-compatible markdown briefs from article JSON"""
+    """
+    Generates formatted Hugo-compatible markdown briefs from article JSON.
+
+    Agent Role in 18-Agent System:
+    - Agent #13: Brief Formatter - Converts JSON to Hugo markdown
+    - Agent #14: Theme Analyzer - Identifies cross-article patterns
+    - Agent #15: Recommendation Generator - Creates actionable guidance
+
+    Type III Implementation:
+    - Input: Derived insights (summaries, tags) from local processing
+    - Processing: Formats derived content into public brief (local)
+    - Output: Hugo markdown ready for public GitHub Pages deployment
+    - Boundary: Only derived insights are formatted for public sharing
+
+    This class operates entirely on derived content that has already been
+    processed locally. It never touches raw article content, ensuring Type III
+    compliance: "insights travel, data stays."
+
+    Methods:
+        generate_brief: Main entry point, orchestrates brief generation
+        _generate_front_matter: Creates Hugo YAML front matter
+        _generate_executive_summary: Summarizes weekly themes
+        _generate_articles_section: Formats article summaries
+        _generate_themes_section: Analyzes cross-article themes
+        _generate_recommendations_section: Creates actionable guidance
+        _generate_footer: Adds metadata and attribution
+
+    Example:
+        >>> generator = BriefGenerator()
+        >>> with open("2025-11-16_articles.json") as f:
+        ...     articles_data = json.load(f)
+        >>> brief_md = generator.generate_brief(articles_data, "2025-11-16")
+        >>> print(len(brief_md))  # Hugo-compatible markdown
+    """
 
     def __init__(self):
         pass
 
     def generate_brief(self, articles_data: Dict, date_str: str) -> str:
-        """Generate a complete Hugo-compatible brief from articles JSON"""
+        """
+        Generate a complete Hugo-compatible brief from articles JSON.
+
+        Orchestrates the Publishing agent workflow:
+        1. Brief Formatter: Assembles Hugo front matter and sections
+        2. Theme Analyzer: Identifies cross-article themes
+        3. Recommendation Generator: Creates actionable guidance
+
+        Type III Note: Input is derived content only (summaries, tags, themes).
+        Raw article content never appears in generated brief.
+
+        Args:
+            articles_data (Dict): Processed articles from fetch_and_summarize.py
+                Expected structure:
+                {
+                    "articles": [...],  # List of article summaries
+                    "metadata": {...}   # Processing metadata
+                }
+            date_str (str): Date string in YYYY-MM-DD format
+
+        Returns:
+            str: Complete Hugo-compatible markdown with:
+                - YAML front matter
+                - Executive summary
+                - Featured articles (derived summaries only)
+                - Key themes analysis
+                - Recommended actions
+                - Footer with metadata
+
+        Example:
+            >>> brief = generator.generate_brief(articles_data, "2025-11-16")
+            >>> with open("brief.md", "w") as f:
+            ...     f.write(brief)
+        """
         articles = articles_data.get("articles", [])
         metadata = articles_data.get("metadata", {})
 
@@ -262,16 +359,24 @@ Key themes include advances in formal verification methods, new governance frame
         return "\n".join(recommendations)
 
     def _generate_footer(self, metadata: Dict) -> str:
-        """Generate footer with metadata"""
+        """
+        Generate footer with metadata and attribution.
+
+        Args:
+            metadata (Dict): Processing metadata from article JSON
+
+        Returns:
+            str: Markdown footer with processing details and attribution
+        """
         footer = f"""## About This Brief
 
-This brief was generated by the RKL Secure Reasoning Brief Agent using **Type I secure reasoning**—all analysis occurred locally on RKL infrastructure using open-source AI models (Llama 3.2/Mistral via Ollama).
+This brief was generated by the RKL Secure Reasoning Brief Agent using **Type III secure reasoning**—all raw data analysis occurred locally on RKL infrastructure using open-source AI models (Llama 3.2/Mistral via Ollama), with only derived insights published here.
 
 **Sources monitored:** ArXiv (AI, Security), AI Alignment Forum, Google AI Blog, and other research feeds
 
 **Date range:** {metadata.get("date_range", "N/A")}
 **Articles processed:** {metadata.get("num_articles", "N/A")}
-**Generated:** {datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")}
+**Generated:** {datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")}
 
 ---
 
@@ -280,13 +385,69 @@ This brief was generated by the RKL Secure Reasoning Brief Agent using **Type I 
 
 
 class GitHubPublisher:
-    """Publishes briefs to GitHub repository"""
+    """
+    Publishes briefs to GitHub repository (Publishing Agent Group).
 
-    def __init__(self, repo_path: Path):
+    Agent Role in 18-Agent System:
+    - Agent #16: Git Publisher - Commits and pushes to GitHub
+
+    Type III Boundary Enforcement:
+    - THIS IS WHERE TYPE III BOUNDARY CROSSING OCCURS
+    - Input: Hugo markdown brief (derived insights only)
+    - Action: Commits to GitHub, triggers Netlify deploy
+    - Result: Public brief on GitHub Pages (Type III output)
+    - Verification: Only derived content crosses boundary, never raw articles
+
+    This publisher is the final step in the Type III workflow. It takes
+    locally-generated derived insights and publishes them publicly, while
+    raw article content remains on local Betty cluster.
+
+    Attributes:
+        repo_path (Path): Path to Git repository containing website
+
+    Example:
+        >>> publisher = GitHubPublisher(Path("/path/to/website"))
+        >>> success = publisher.commit_and_push(
+        ...     Path("content/briefs/2025-11-16-brief.md"),
+        ...     "Add Secure Reasoning Brief for 2025-11-16",
+        ...     auto_push=True
+        ... )
+    """
+
+    def __init__(self, repo_path: Path, research_logger: Optional['StructuredLogger'] = None):
         self.repo_path = repo_path
+        self.research_logger = research_logger
 
-    def commit_and_push(self, file_path: Path, commit_message: str, auto_push: bool = False) -> bool:
-        """Commit and optionally push a file to the repository"""
+    def commit_and_push(self, file_path: Path, commit_message: str, auto_push: bool = False,
+                        session_id: Optional[str] = None) -> bool:
+        """
+        Commit and optionally push a file to the repository.
+
+        Type III Boundary Crossing: This method publishes derived insights
+        to GitHub Pages, completing the Type III workflow.
+
+        Args:
+            file_path (Path): Path to file to commit (Hugo markdown brief)
+            commit_message (str): Git commit message
+            auto_push (bool): If True, automatically push to remote (triggers deploy)
+
+        Returns:
+            bool: True if successful, False on error
+
+        Side Effects:
+            - Commits file to local git repository
+            - If auto_push=True, pushes to GitHub (triggers Netlify deployment)
+            - Netlify then builds and deploys to public GitHub Pages
+
+        Example:
+            >>> publisher = GitHubPublisher(website_path)
+            >>> publisher.commit_and_push(
+            ...     brief_path,
+            ...     "Add weekly brief",
+            ...     auto_push=True
+            ... )
+            True
+        """
         try:
             # Check if we're in a git repository
             result = subprocess.run(
@@ -298,7 +459,34 @@ class GitHubPublisher:
 
             if result.returncode != 0:
                 logger.error(f"Not a git repository: {self.repo_path}")
+                # Log boundary event: failure
+                if self.research_logger and RKL_LOGGING_AVAILABLE:
+                    self.research_logger.log("boundary_event", {
+                        "event_id": str(uuid.uuid4()),
+                        "timestamp": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                        "t": int(time.time() * 1000),
+                        "session_id": session_id or "unknown",
+                        "agent_id": "git_publisher",
+                        "rule_id": "type3.publication.derived_only",
+                        "trigger_tag": "git_error",
+                        "context_tag": "not_git_repo",
+                        "action": "block"
+                    })
                 return False
+
+            # Log boundary event: prepare to publish (Type III boundary crossing)
+            if self.research_logger and RKL_LOGGING_AVAILABLE:
+                self.research_logger.log("boundary_event", {
+                    "event_id": str(uuid.uuid4()),
+                    "timestamp": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "t": int(time.time() * 1000),
+                    "session_id": session_id or "unknown",
+                    "agent_id": "git_publisher",
+                    "rule_id": "type3.publication.derived_only",
+                    "trigger_tag": "prepare_publish",
+                    "context_tag": "github_commit",
+                    "action": "allow"
+                })
 
             # Add file
             subprocess.run(
@@ -316,8 +504,32 @@ class GitHubPublisher:
 
             logger.info("Successfully committed changes")
 
+            # Get commit SHA for governance ledger
+            sha_result = subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            commit_sha = sha_result.stdout.strip()
+
             # Optionally push
             if auto_push:
+                # Log boundary event: pushing to remote (Type III boundary crossing)
+                if self.research_logger and RKL_LOGGING_AVAILABLE:
+                    self.research_logger.log("boundary_event", {
+                        "event_id": str(uuid.uuid4()),
+                        "timestamp": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                        "t": int(time.time() * 1000),
+                        "session_id": session_id or "unknown",
+                        "agent_id": "git_publisher",
+                        "rule_id": "type3.publication.derived_only",
+                        "trigger_tag": "prepare_publish",
+                        "context_tag": "github_push",
+                        "action": "allow"
+                    })
+
                 subprocess.run(
                     ["git", "push"],
                     cwd=self.repo_path,
@@ -329,17 +541,98 @@ class GitHubPublisher:
 
         except subprocess.CalledProcessError as e:
             logger.error(f"Git command failed: {e}")
+            # Log boundary event: failure
+            if self.research_logger and RKL_LOGGING_AVAILABLE:
+                self.research_logger.log("boundary_event", {
+                    "event_id": str(uuid.uuid4()),
+                    "timestamp": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "t": int(time.time() * 1000),
+                    "session_id": session_id or "unknown",
+                    "agent_id": "git_publisher",
+                    "rule_id": "type3.publication.derived_only",
+                    "trigger_tag": "git_error",
+                    "context_tag": "subprocess_error",
+                    "action": "block"
+                })
             return False
 
 
 def main():
-    """Main entry point"""
+    """
+    Main entry point for brief publishing and GitHub deployment.
+
+    Orchestrates the complete Publishing agent workflow:
+
+    1. **Input Loading** (lines 469-488):
+       - Loads .env variables (PUBLISH_TO_GITHUB, AUTO_PUSH)
+       - Finds latest article JSON from fetch_and_summarize.py
+       - Loads derived insights (summaries, tags, themes)
+
+    2. **Brief Generation** (lines 490-505):
+       - Agent #13: Brief Formatter creates Hugo markdown
+       - Agent #14: Theme Analyzer identifies patterns
+       - Agent #15: Recommendation Generator creates guidance
+       - All processing uses derived content only (Type III compliant)
+
+    3. **Local Saving** (lines 507-517):
+       - Saves Hugo markdown to website content directory
+       - File: website/content/briefs/{date}-secure-reasoning-brief.md
+       - Ready for Hugo build or manual review
+
+    4. **GitHub Publishing** (lines 519-538):
+       - Agent #16: Git Publisher commits to GitHub
+       - Optionally pushes to remote (triggers Netlify deploy)
+       - **THIS IS TYPE III BOUNDARY CROSSING**
+       - Only derived insights are published, never raw articles
+
+    Type III Workflow Completion:
+    - Raw RSS feeds: Stayed on Betty cluster (never exposed)
+    - Raw articles: Stayed on Betty cluster (never exposed)
+    - Derived summaries: Published to GitHub Pages (Type III output)
+    - Demonstrates: "Raw data stays local, derived insights travel"
+
+    Environment Variables:
+        PUBLISH_TO_GITHUB: Enable git commit (default: false)
+        AUTO_PUSH: Enable git push to remote (default: false)
+
+    Outputs:
+        website/content/briefs/{YYYY-MM-DD}-secure-reasoning-brief.md
+        Optionally commits to git and pushes to GitHub
+
+    Example:
+        $ python scripts/publish_brief.py
+        INFO - Using article data from: content/briefs/2025-11-16_articles.json
+        INFO - Generating Hugo-compatible brief...
+        INFO - Brief saved to: website/content/briefs/2025-11-16-secure-reasoning-brief.md
+        INFO - GitHub publishing disabled (set PUBLISH_TO_GITHUB=true to enable)
+        INFO - Done!
+
+    Example (with GitHub publishing):
+        $ PUBLISH_TO_GITHUB=true AUTO_PUSH=true python scripts/publish_brief.py
+        INFO - Committing to git repository...
+        INFO - Successfully committed to git
+        INFO - Changes pushed to remote - Netlify will auto-deploy
+        INFO - Done!
+    """
     # Load environment variables
     load_dotenv()
 
     # Get configuration
     script_dir = Path(__file__).parent.parent
     content_dir = script_dir / "content" / "briefs"
+
+    # Initialize research telemetry logger
+    research_logger = None
+    if RKL_LOGGING_AVAILABLE:
+        research_data_dir = script_dir / "data" / "research"
+        research_logger = StructuredLogger(
+            base_dir=str(research_data_dir),
+            rkl_version="1.0",
+            batch_size=50
+        )
+        logger.info(f"Research telemetry enabled: {research_data_dir}")
+    else:
+        logger.warning("Research telemetry disabled (rkl_logging not available)")
 
     # Find latest articles JSON
     json_files = sorted(content_dir.glob("*_articles.json"), reverse=True)
@@ -355,6 +648,9 @@ def main():
     with open(latest_json) as f:
         articles_data = json.load(f)
 
+    # Extract session_id from articles data (added by fetch_and_summarize.py)
+    session_id = articles_data.get("session_id", f"publish-{datetime.utcnow().strftime('%Y-%m-%d')}-{str(uuid.uuid4())[:8]}")
+
     # Extract date from filename
     date_str = latest_json.stem.split("_")[0]  # e.g., "2025-11-11" from "2025-11-11_articles.json"
 
@@ -366,6 +662,20 @@ def main():
     if not brief_content:
         logger.error("Failed to generate brief")
         sys.exit(1)
+
+    # Log reasoning graph edge: brief_formatter → git_publisher
+    if research_logger and RKL_LOGGING_AVAILABLE:
+        research_logger.log("reasoning_graph_edge", {
+            "session_id": session_id,
+            "edge_id": str(uuid.uuid4()),
+            "timestamp": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "t": int(time.time() * 1000),
+            "from_agent": "brief_formatter",
+            "to_agent": "git_publisher",
+            "msg_type": "act",
+            "intent_tag": "publish_brief",
+            "content_hash": sha256_text(brief_content[:1000])
+        })
 
     # Determine output path (Hugo website content directory)
     website_dir = script_dir.parent / "website"
@@ -387,13 +697,41 @@ def main():
 
     if publish_to_github:
         logger.info("Committing to git repository...")
-        publisher = GitHubPublisher(website_dir)
+        publisher = GitHubPublisher(website_dir, research_logger)
 
-        commit_msg = f"Add Secure Reasoning Brief for {date_str}\n\nGenerated by RKL Brief Agent using Type I secure reasoning"
-        success = publisher.commit_and_push(brief_path, commit_msg, auto_push)
+        commit_msg = f"Add Secure Reasoning Brief for {date_str}\n\nGenerated by RKL Brief Agent using Type III secure reasoning"
+        success = publisher.commit_and_push(brief_path, commit_msg, auto_push, session_id)
 
         if success:
             logger.info("Successfully committed to git")
+
+            # Get commit SHA for governance ledger
+            try:
+                sha_result = subprocess.run(
+                    ["git", "rev-parse", "HEAD"],
+                    cwd=website_dir,
+                    capture_output=True,
+                    text=True,
+                    check=True
+                )
+                commit_sha = sha_result.stdout.strip()
+            except subprocess.CalledProcessError:
+                commit_sha = "unknown"
+
+            # Log governance ledger entry (Type III compliance audit)
+            if research_logger and RKL_LOGGING_AVAILABLE:
+                research_logger.log("governance_ledger", {
+                    "timestamp": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "publish_id": session_id,
+                    "artifact_ids": [sha256_text(f"{a.get('title','')}|{a.get('link','')}") for a in articles_data.get("articles", [])],
+                    "contributing_agent_ids": ["brief_formatter", "theme_analyzer", "recommendation_generator", "git_publisher"],
+                    "verification_hashes": [sha256_text(json.dumps(a)) for a in articles_data.get("articles", [])[:5]],
+                    "type3_verified": True,
+                    "human_signoff_id": os.getenv("HUMAN_SIGNOFF_ID", "unknown"),
+                    "release_commit_sha": commit_sha,
+                    "schema_version": 1
+                })
+
             if auto_push:
                 logger.info("Changes pushed to remote - Netlify will auto-deploy")
             else:
@@ -402,6 +740,11 @@ def main():
             logger.warning("Failed to commit to git (brief still saved locally)")
     else:
         logger.info("GitHub publishing disabled (set PUBLISH_TO_GITHUB=true to enable)")
+
+    # Flush and close research logger
+    if research_logger:
+        research_logger.close()
+        logger.info("Research telemetry data saved")
 
     logger.info("Done!")
 

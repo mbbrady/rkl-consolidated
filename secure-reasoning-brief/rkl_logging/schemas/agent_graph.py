@@ -11,13 +11,13 @@ AGENT_GRAPH_SCHEMA = {
     ],
 
     "optional_fields": [
-        "intent_tag", "parent_edge_id", "role_tags",
+        "t", "intent_tag", "parent_edge_id", "role_tags",
         "latency_ms", "retry_count"
     ],
 
     "field_types": {
         "edge_id": str, "session_id": str, "timestamp": str,
-        "from_agent": str, "to_agent": str, "msg_type": str,
+        "t": int, "from_agent": str, "to_agent": str, "msg_type": str,
         "intent_tag": str, "content_hash": str, "parent_edge_id": str,
         "role_tags": list, "latency_ms": int, "retry_count": int
     },

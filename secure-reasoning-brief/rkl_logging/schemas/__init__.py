@@ -14,12 +14,17 @@ from .boundary_events import BOUNDARY_EVENTS_SCHEMA
 from .governance_ledger import GOVERNANCE_LEDGER_SCHEMA
 
 # Master schema registry
+# Note: Keys match artifact_type logged by agents
 SCHEMAS = {
     "execution_context": EXECUTION_CONTEXT_SCHEMA,
-    "agent_graph": AGENT_GRAPH_SCHEMA,
-    "boundary_events": BOUNDARY_EVENTS_SCHEMA,
+    "reasoning_graph_edge": AGENT_GRAPH_SCHEMA,  # Maps to agent_graph schema
+    "boundary_event": BOUNDARY_EVENTS_SCHEMA,    # Singular to match agent logging
     "governance_ledger": GOVERNANCE_LEDGER_SCHEMA
 }
+
+# Aliases for backward compatibility with config
+SCHEMAS["agent_graph"] = AGENT_GRAPH_SCHEMA
+SCHEMAS["boundary_events"] = BOUNDARY_EVENTS_SCHEMA
 
 
 def validate_record(artifact_type: str, record: dict) -> tuple[bool, list[str]]:
