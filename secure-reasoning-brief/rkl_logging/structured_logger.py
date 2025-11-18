@@ -246,29 +246,61 @@ class StructuredLogger:
             self._generate_manifest()
 
     def _generate_manifest(self) -> None:
-        """Generate daily manifest with statistics."""
+        """
+        Generate daily manifest with statistics.
+
+        CRITICAL: Merges with existing manifest instead of overwriting.
+        This allows multiple processes per day to accumulate stats correctly.
+        """
         today = datetime.utcnow().strftime("%Y-%m-%d")
         manifest_dir = self.base_dir / "manifests"
         manifest_dir.mkdir(parents=True, exist_ok=True)
 
         manifest_path = manifest_dir / f"{today}.json"
 
-        manifest = {
+        # Load existing manifest if present (merge instead of overwrite)
+        existing = {
             "date": today,
             "rkl_version": self.rkl_version,
-            "artifacts": {
-                artifact: {
-                    "rows": stats["rows"],
-                    "writes": stats["writes"],
-                    "schema_version": "v1.0"
-                }
-                for artifact, stats in self._stats.items()
-            },
-            "generated_at": datetime.utcnow().isoformat() + "Z"
+            "artifacts": {}
         }
 
-        with open(manifest_path, "w") as f:
-            f.write(json.dumps(manifest, indent=2))
+        if manifest_path.exists():
+            try:
+                with open(manifest_path, "r") as f:
+                    existing = json.load(f)
+            except (json.JSONDecodeError, IOError):
+                # If manifest is corrupted, start fresh but log warning
+                import logging
+                logging.warning(f"Could not load existing manifest {manifest_path}, starting fresh")
+
+        # Merge: add this process's stats to existing counts
+        for artifact, stats in self._stats.items():
+            if artifact not in existing["artifacts"]:
+                existing["artifacts"][artifact] = {
+                    "rows": 0,
+                    "writes": 0,
+                    "schema_version": "v1.0"
+                }
+
+            # Accumulate counts from this process
+            prev = existing["artifacts"][artifact]
+            prev["rows"] = int(prev.get("rows", 0)) + int(stats["rows"])
+            prev["writes"] = int(prev.get("writes", 0)) + int(stats["writes"])
+            prev["schema_version"] = "v1.0"
+
+        # Update timestamp
+        existing["generated_at"] = datetime.utcnow().isoformat() + "Z"
+        existing["rkl_version"] = self.rkl_version
+
+        # Atomic write: tmp file + rename (prevents corruption from interrupted writes)
+        tmp_path = manifest_path.with_suffix(".json.tmp")
+        with open(tmp_path, "w") as f:
+            f.write(json.dumps(existing, indent=2))
+
+        # Atomic rename (OS-level atomic operation)
+        import os
+        os.replace(tmp_path, manifest_path)
 
     def get_stats(self) -> Dict[str, Dict[str, int]]:
         """Get logging statistics."""
