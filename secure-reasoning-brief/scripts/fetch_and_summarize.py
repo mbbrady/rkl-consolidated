@@ -639,6 +639,28 @@ def main():
 
         summarized_articles.append(summary)
 
+    # Validate summaries before proceeding
+    invalid_articles = [
+        (idx + 1, article) for idx, article in enumerate(summarized_articles)
+        if not article.get("technical_summary") or not article.get("lay_explanation")
+    ]
+
+    if invalid_articles:
+        logger.error("Detected empty summaries; aborting publish step.")
+        for idx, article in invalid_articles:
+            logger.error(
+                "Article %s missing fields (tech:%s, lay:%s): %s",
+                idx,
+                "ok" if article.get("technical_summary") else "EMPTY",
+                "ok" if article.get("lay_explanation") else "EMPTY",
+                article.get("title", "untitled")
+            )
+        if research_logger:
+            research_logger.close()
+        sys.exit(1)
+    else:
+        logger.info("All %d articles have non-empty technical and lay summaries.", len(summarized_articles))
+
     # Log governance ledger entry (for research)
     if research_logger and RKL_LOGGING_AVAILABLE:
         research_logger.log("governance_ledger", {

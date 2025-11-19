@@ -16,6 +16,53 @@ A comprehensive multi-agent system that generates weekly briefs on AI governance
 
 ---
 
+## Session Summary – RKL Phase-0 Telemetry Sprint
+
+### Critical Issues and Status
+1. **Worker Node Sleep Problem (BLOCKER → LOCKED AWAKE)**  
+   - Work node now has `/etc/systemd/logind.conf.d/no-suspend.conf`, `sleep.target`/`suspend.target`/`suspend-idle.timer` are masked, and the keep-awake script ran—box stays awake until we restore sleep.  
+   - When sprint ends, follow `cluster/management/RESTORE_SLEEP.md` to remove the override, unmask the units, and re-enable timers.
+2. **Empty Summaries (PARTIALLY FIXED)**  
+   - Articles 1–17 now have valid `technical_summary` and `lay_explanation` fields (e.g., Article 1: 556/613 chars).  
+   - Articles 18–20 are empty because the worker slept mid-run and `generate()` swallows errors while the pipeline exits with code 0.  
+   - `conda run -n rkl-briefs python scripts/fetch_and_summarize.py` succeeds locally, but this sandbox lacks outbound network so RSS pulls return zero rows—rerun the command on the worker itself to refill Articles 18–20.  
+   - `scripts/fetch_and_summarize.py` now fails loudly (exit 1) if any article returns an empty technical or lay summary, so bad runs no longer produce “success” JSON.  
+   - **Remaining:** Re-run the last 3 articles on the worker to replace Article 18–20 blanks (pipeline will enforce the checks automatically).
+3. **Gemini Integration (NOT YET INTEGRATED)**  
+   - `scripts/gemini_client.py` exists but is not referenced in either `fetch_and_summarize.py` or `publish_brief.py`.  
+   - Need a decision on how Gemini participates (QA validation, fallback model, or enhancement) plus plumbing and documentation to capture competition bonus points.
+4. **Cron Automation (READY BUT UNVERIFIED)**  
+   - Two jobs are configured (9:00 and 21:00) via `scripts/cron_pipeline_wrapper.sh`, targeting conda env `rkl-briefs` with logs under `logs/cron/`.  
+   - Once the worker stays awake, run `crontab -l | grep rkl-phase0` and exercise a full automated cycle while tailing logs.
+
+### What Currently Works
+- Telemetry: manifest generation (with merge fix), partitioned Parquet, four artifact types logged, schema health check passes.  
+- Article ingestion: RSS feeds (ArXiv AI, ArXiv Crypto, AI Alignment Forum) collect 50 articles, pipeline processes 20/run with metadata captured.  
+- Summary generation (worker awake): Ollama endpoint `http://192.168.1.11:11434/api/generate` with `llama3.2:3b`, ~35–40 seconds/article; Articles 1–17 confirmed.
+
+### Critical Next Steps (Priority Order)
+1. **Keep the worker awake:** physical wake + `logind` override + 15-minute stability test.  
+2. **Finish the current brief:** re-run Articles 18–20 and validate `/home/mike/project/rkl-consolidated/secure-reasoning-brief/content/briefs/2025-11-17_articles.json`.  
+3. **Fail loudly on empty summaries:** update pipeline to exit non-zero when summaries are missing or counts fall below threshold.  
+4. **Integrate Gemini:** define QA role, wire `scripts/gemini_client.py`, and document behavior for competition scoring.  
+5. **Test cron automation:** verify both daily runs, monitor logs, and target 20–30 sessions (Nov 18–26) for 200+ execution records.
+
+### Files Touched This Session
+- Created: `cluster/management/scripts/force-awake-worker.sh`, `cluster/management/scripts/setup_cron.sh`, `rkl-consolidated/secure-reasoning-brief/scripts/cron_pipeline_wrapper.sh`.  
+- Existing helpers still relevant: `scripts/health_check.py`, `scripts/fix_manifest.py`, `rkl_logging/structured_logger.py`, `cluster/management/scripts/disable-sleep-for-sprint.sh`, `cluster/management/scripts/restore-sleep-after-sprint.sh`.
+
+### Lessons Learned
+- Do not celebrate output until logs are grep’d for `error|failed|exception` **and** content spot-checks pass.  
+- Treat automation as downstream of core reliability—pause and fix blockers before celebrating.  
+- Wait for explicit “done” confirmation; no more trophy emojis until the summaries exist.
+
+### Competition Status (13 Days to 2025‑12‑01 Deadline)
+- ✅ 18-agent system, Phase-0 telemetry, manifest merge fix, competition-grade health check.  
+- ⚠️ Summary generation works but depends on worker stability.  
+- ❌ Outstanding: Gemini integration, cron validation, 20+ operational sessions, architecture diagram, documentation (<1500 words), demo video (+10 bonus). Immediate blocker remains the sleepy worker.
+
+---
+
 ## What This System Does
 
 ### 1. **Operational**: Generates Weekly Briefs
