@@ -18,6 +18,7 @@ from .system_state import SYSTEM_STATE_SCHEMA
 from .failure_snapshots import FAILURE_SNAPSHOTS_SCHEMA
 from .quality_trajectories import QUALITY_TRAJECTORIES_SCHEMA
 from .hallucination_matrix import HALLUCINATION_MATRIX_SCHEMA
+from .human_interventions import HUMAN_INTERVENTIONS_SCHEMA
 
 # Master schema registry
 # Note: Keys match artifact_type logged by agents
@@ -31,7 +32,8 @@ SCHEMAS = {
     "system_state": SYSTEM_STATE_SCHEMA,
     "failure_snapshots": FAILURE_SNAPSHOTS_SCHEMA,
     "quality_trajectories": QUALITY_TRAJECTORIES_SCHEMA,
-    "hallucination_matrix": HALLUCINATION_MATRIX_SCHEMA
+    "hallucination_matrix": HALLUCINATION_MATRIX_SCHEMA,
+    "human_interventions": HUMAN_INTERVENTIONS_SCHEMA
 }
 
 # Aliases for backward compatibility with config

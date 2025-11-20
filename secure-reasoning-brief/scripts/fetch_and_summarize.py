@@ -649,6 +649,20 @@ def main():
     keywords = feeds_config.get("keywords", [])
     fetcher = FeedFetcher(feeds_config, keywords, research_logger=research_logger, session_id=session_id)
 
+    def log_human_intervention(intervention_type: str, human_role: str = "operator", target_turn_id: int = 0, rationale_tag: str = "") -> None:
+        """Manually log a human intervention event (use during reruns/approvals)."""
+        if not research_logger or not RKL_LOGGING_AVAILABLE:
+            return
+        research_logger.log("human_interventions", {
+            "session_id": session_id,
+            "event_id": str(uuid.uuid4()),
+            "t": int(time.time() * 1000),
+            "human_role": human_role,
+            "intervention_type": intervention_type,
+            "target_turn_id": target_turn_id,
+            "delta_metrics": {},
+            "rationale_tag": rationale_tag
+        })
     def log_system_state(stage: str) -> None:
         """Capture lightweight host metrics for research (structural only)."""
         if not research_logger or not psutil:
