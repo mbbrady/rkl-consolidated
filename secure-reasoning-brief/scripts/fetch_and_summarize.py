@@ -781,6 +781,8 @@ def main():
 
     if not articles:
         logger.warning("No articles found matching criteria")
+        if research_logger:
+            research_logger.close()
         return
 
     # Limit number of articles
