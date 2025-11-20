@@ -505,9 +505,9 @@ class FeedFetcher:
                 content = entry.get("content", [{}])[0].get("value", summary)
                 link = entry.get("link", "")
 
-                # Check if article matches keywords
+                # Check if article matches keywords. If keyword list is empty, accept all.
                 text_to_search = f"{title} {summary}".lower()
-                if any(keyword in text_to_search for keyword in self.keywords):
+                if (not self.keywords) or any(keyword in text_to_search for keyword in self.keywords):
                     articles.append({
                         "title": title,
                         "content": content,
