@@ -45,6 +45,21 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List, Dict, Optional
 from dotenv import load_dotenv
+import subprocess
+import platform
+
+# Optional system metrics
+try:
+    import psutil  # type: ignore
+except ImportError:
+    psutil = None
+
+# Optional Gemini QA
+try:
+    from scripts.gemini_client import GeminiClient  # type: ignore
+    GEMINI_CLIENT_AVAILABLE = True
+except Exception:
+    GEMINI_CLIENT_AVAILABLE = False
 
 # Import RKL logging for research telemetry
 try:
@@ -150,13 +165,17 @@ class OllamaClient:
 
             # Log execution context for research
             if self.research_logger and RKL_LOGGING_AVAILABLE:
-                self.research_logger.log("execution_context", {
+                quant = os.getenv("OLLAMA_QUANT", "")
+                seed_env = os.getenv("OLLAMA_SEED")
+                seed_val = int(seed_env) if seed_env and seed_env.isdigit() else None
+                exec_record = {
                     "timestamp": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
                     "session_id": session_id or "unknown",
                     "turn_id": turn_id or 0,
                     "agent_id": agent_id,
                     "model_id": self.model,
                     "model_rev": self.model.split(":")[-1] if ":" in self.model else "latest",
+                    "quant": quant or "unknown",
                     "temp": payload.get("temperature", 0.7),  # Default from Ollama
                     "top_p": payload.get("top_p", 1.0),  # Default from Ollama
                     "ctx_tokens_used": prompt_tokens,
@@ -165,7 +184,10 @@ class OllamaClient:
                     "prompt_id_hash": sha256_text(prompt) if RKL_LOGGING_AVAILABLE else "",
                     "system_prompt_hash": sha256_text(system_prompt) if system_prompt and RKL_LOGGING_AVAILABLE else "",
                     "token_estimation": "api" if prompt_tokens and gen_tokens else "word_count"
-                })
+                }
+                if seed_val is not None:
+                    exec_record["seed"] = seed_val
+                self.research_logger.log("execution_context", exec_record)
 
                 # Log boundary event (Type III compliance)
                 self.research_logger.log("boundary_event", {
@@ -217,7 +239,7 @@ class ArticleSummarizer:
         self.client = ollama_client
         self.max_words = max_words
 
-    def summarize_article(self, title: str, content: str, link: str,
+def summarize_article(self, title: str, content: str, link: str,
                           session_id: Optional[str] = None, turn_id: Optional[int] = None) -> Dict:
         """
         Generate technical summary and lay explanation for an article.
@@ -384,11 +406,15 @@ class FeedFetcher:
         >>> articles = fetcher.fetch_feeds()
     """
 
-    def __init__(self, feeds_config: Dict, keywords: List[str], days_back: int = 7):
+    def __init__(self, feeds_config: Dict, keywords: List[str], days_back: int = 7,
+                 research_logger: Optional['StructuredLogger'] = None,
+                 session_id: str = "unknown"):
         self.feeds_config = feeds_config
         self.keywords = [kw.lower() for kw in keywords]
         self.days_back = days_back
         self.cutoff_date = datetime.now() - timedelta(days=days_back)
+        self.research_logger = research_logger
+        self.session_id = session_id
 
     def fetch_feeds(self) -> List[Dict]:
         """
@@ -492,6 +518,25 @@ class FeedFetcher:
                     })
 
             logger.info(f"Found {len(articles)} relevant articles in {feed['name']}")
+
+            # Telemetry: retrieval provenance (structural only)
+            if self.research_logger and RKL_LOGGING_AVAILABLE:
+                candidate_hashes = [
+                    sha256_text(entry.get("link", "") or entry.get("id", ""))
+                    for entry in parsed.entries
+                ]
+                selected_hashes = [sha256_text(a["link"]) for a in articles]
+                self.research_logger.log("retrieval_provenance", {
+                    "session_id": self.session_id,
+                    "feed_name": feed.get("name", "unknown"),
+                    "feed_url_hash": sha256_text(feed.get("url", "")),
+                    "candidate_count": len(candidate_hashes),
+                    "selected_count": len(selected_hashes),
+                    "candidate_hashes": candidate_hashes[:50],
+                    "selected_hashes": selected_hashes[:50],
+                    "cutoff_date": self.cutoff_date.strftime("%Y-%m-%d"),
+                    "category": feed.get("category", "general")
+                })
 
         except Exception as e:
             logger.error(f"Error fetching feed {feed['name']}: {e}")
@@ -602,11 +647,123 @@ def main():
     summarizer = ArticleSummarizer(ollama_client, max_words)
 
     keywords = feeds_config.get("keywords", [])
-    fetcher = FeedFetcher(feeds_config, keywords)
+    fetcher = FeedFetcher(feeds_config, keywords, research_logger=research_logger, session_id=session_id)
+
+    def log_system_state(stage: str) -> None:
+        """Capture lightweight host metrics for research (structural only)."""
+        if not research_logger or not psutil:
+            return
+        vm = psutil.virtual_memory()
+        cpu_percent = psutil.cpu_percent(interval=0.1)
+        load1, load5, load15 = (0.0, 0.0, 0.0)
+        try:
+            load1, load5, load15 = os.getloadavg()
+        except (AttributeError, OSError):
+            pass
+        gpu_stats = []
+        driver_version = None
+        try:
+            gpu_query = [
+                "nvidia-smi",
+                "--query-gpu=uuid,name,utilization.gpu,memory.used,memory.total,temperature.gpu,power.draw,power.limit,pstate,clocks.sm,clocks.mem,driver_version",
+                "--format=csv,noheader,nounits"
+            ]
+            raw = subprocess.check_output(gpu_query, stderr=subprocess.DEVNULL, text=True)
+            for line in raw.strip().splitlines():
+                parts = [p.strip() for p in line.split(",")]
+                if len(parts) >= 11:
+                    gpu_stats.append({
+                        "uuid": parts[0],
+                        "name": parts[1],
+                        "util_percent": float(parts[2]),
+                        "mem_used_mb": float(parts[3]),
+                        "mem_total_mb": float(parts[4]),
+                        "temp_c": float(parts[5]),
+                        "power_w": float(parts[6]),
+                        "power_cap_w": float(parts[7]),
+                        "pstate": parts[8],
+                        "sm_clock_mhz": float(parts[9]),
+                        "mem_clock_mhz": float(parts[10]),
+                        "driver_version": parts[11] if len(parts) > 11 else None
+                    })
+                    driver_version = parts[11] if len(parts) > 11 else None
+        except Exception:
+            gpu_stats = []
+
+        # Disk and network
+        disk_io = {}
+        net_io = {}
+        try:
+            dio = psutil.disk_io_counters()
+            if dio:
+                disk_io = {
+                    "read_bytes": dio.read_bytes,
+                    "write_bytes": dio.write_bytes,
+                    "read_time_ms": dio.read_time,
+                    "write_time_ms": dio.write_time
+                }
+        except Exception:
+            pass
+        try:
+            nio = psutil.net_io_counters()
+            if nio:
+                net_io = {
+                    "bytes_sent": nio.bytes_sent,
+                    "bytes_recv": nio.bytes_recv,
+                    "dropin": nio.dropin,
+                    "dropout": nio.dropout,
+                    "errin": nio.errin,
+                    "errout": nio.errout
+                }
+        except Exception:
+            pass
+
+        # Per-process stats
+        proc_cpu = None
+        proc_mem = None
+        try:
+            p = psutil.Process()
+            proc_cpu = p.cpu_percent(interval=0.0)
+            meminfo = p.memory_info()
+            proc_mem = {"rss": meminfo.rss, "vms": meminfo.vms}
+        except Exception:
+            pass
+
+        record = {
+            "session_id": session_id,
+            "stage": stage,
+            "host": platform.node(),
+            "platform": platform.platform(),
+            "cpu_percent": cpu_percent,
+            "load1": load1,
+            "load5": load5,
+            "load15": load15,
+            "mem_total_bytes": vm.total,
+            "mem_used_bytes": vm.used,
+            "mem_free_bytes": vm.available,
+            "mem_percent": vm.percent,
+        }
+        if gpu_stats:
+            record["gpus"] = gpu_stats
+            record["gpu_count"] = len(gpu_stats)
+            if driver_version:
+                record["driver_version"] = driver_version
+        if disk_io:
+            record["disk_io"] = disk_io
+        if net_io:
+            record["net_io"] = net_io
+        if proc_cpu is not None:
+            record["proc_cpu_percent"] = proc_cpu
+        if proc_mem is not None:
+            record["proc_mem_bytes"] = proc_mem
+
+        research_logger.log("system_state", record)
 
     # Fetch articles
+    log_system_state("start_fetch")
     logger.info("Fetching RSS feeds...")
     articles = fetcher.fetch_feeds()
+    log_system_state("done_fetch")
 
     if not articles:
         logger.warning("No articles found matching criteria")
@@ -639,6 +796,107 @@ def main():
 
         summarized_articles.append(summary)
 
+        # Telemetry: secure reasoning trace bundle (structural)
+        if research_logger and RKL_LOGGING_AVAILABLE:
+            research_logger.log("secure_reasoning_trace", {
+                "session_id": session_id,
+                "task_id": sha256_text(article["link"]),
+                "turn_id": i,
+                "steps": [
+                    {
+                        "phase": "observe",
+                        "input_hash": sha256_text(article["content"][:500]),
+                        "output_hash": sha256_text(article["summary"][:200]),
+                        "verifier_verdict": "n/a",
+                        "citations": []
+                    },
+                    {
+                        "phase": "act",
+                        "input_hash": sha256_text(article["title"]),
+                        "output_hash": sha256_text(summary.get("technical_summary", "")),
+                        "verifier_verdict": "n/a",
+                        "citations": []
+                    },
+                    {
+                        "phase": "verify",
+                        "input_hash": sha256_text(summary.get("technical_summary", "")),
+                        "output_hash": sha256_text(summary.get("lay_explanation", "")),
+                        "verifier_verdict": "pending",
+                        "citations": []
+                    }
+                ]
+            })
+            research_logger.log("quality_trajectories", {
+                "session_id": session_id,
+                "artifact_id": sha256_text(article["link"]),
+                "version": 1,
+                "score_name": "summary_presence",
+                "score": 1.0 if summary.get("technical_summary") and summary.get("lay_explanation") else 0.0,
+                "evaluator_id": "pipeline",
+                "reason_tag": "non_empty_fields",
+                "time_to_next_version": 0
+            })
+
+    # Optional Gemini QA / hallucination matrix logging
+    def run_gemini_qa(summaries: List[Dict]) -> None:
+        if not GEMINI_CLIENT_AVAILABLE:
+            return
+        if os.getenv("ENABLE_GEMINI_QA", "false").lower() not in ("1", "true", "yes"):
+            return
+        try:
+            gem_qamodel = os.getenv("GEMINI_QA_MODEL", "gemini-2.0-flash")
+            gem_client = GeminiClient(model_name=gem_qamodel, research_logger=research_logger)
+        except Exception as e:
+            logger.warning(f"Gemini QA unavailable: {e}")
+            return
+
+        for idx, article in enumerate(summaries, 1):
+            prompt = (
+                "Review the following technical summary and lay explanation of an article. "
+                "Return JSON with fields: verdict (pass/fail/uncertain), "
+                "confidence (0-1), error_type (none/hallucination/omission/format), notes (short). "
+                "Respond with JSON only.\n\n"
+                f"Technical summary:\n{article.get('technical_summary','')}\n\n"
+                f"Lay explanation:\n{article.get('lay_explanation','')}"
+            )
+            verdict = "uncertain"
+            confidence = 0.0
+            error_type = "none"
+            notes = ""
+            try:
+                resp = gem_client.generate(
+                    prompt,
+                    system_prompt="You are a strict QA verifier.",
+                    temperature=0.1,
+                    max_tokens=128,
+                    agent_id="gemini_qa",
+                    session_id=session_id,
+                    turn_id=idx,
+                    task_type="qa_review"
+                )
+                if resp:
+                    import json as _json
+                    parsed = _json.loads(resp)
+                    verdict = str(parsed.get("verdict", verdict)).lower()
+                    confidence = float(parsed.get("confidence", confidence))
+                    error_type = parsed.get("error_type", error_type)
+                    notes = parsed.get("notes", notes)
+            except Exception as e:
+                logger.warning(f"Gemini QA parse failure on article {idx}: {e}")
+
+            if research_logger and RKL_LOGGING_AVAILABLE:
+                research_logger.log("hallucination_matrix", {
+                    "session_id": session_id,
+                    "artifact_id": sha256_text(article.get("link","")),
+                    "verdict": verdict,
+                    "method": "gemini_qa",
+                    "confidence": confidence,
+                    "error_type": error_type,
+                    "notes": notes
+                })
+
+    run_gemini_qa(summarized_articles)
+
     # Validate summaries before proceeding
     invalid_articles = [
         (idx + 1, article) for idx, article in enumerate(summarized_articles)
@@ -646,6 +904,13 @@ def main():
     ]
 
     if invalid_articles:
+        if research_logger and RKL_LOGGING_AVAILABLE:
+            research_logger.log("failure_snapshots", {
+                "session_id": session_id,
+                "reason": "empty_summaries",
+                "failed_count": len(invalid_articles),
+                "failed_titles": [a.get("title", "untitled") for _, a in invalid_articles],
+            }, force_write=True)
         logger.error("Detected empty summaries; aborting publish step.")
         for idx, article in invalid_articles:
             logger.error(

@@ -23,19 +23,21 @@ This agentic system doesn't just solve a problem (generating AI governance brief
 |--------|--------|----------------------------|-------|
 | Execution context & hyperparams | ✅ | `scripts/fetch_and_summarize.py`, `scripts/publish_brief.py` → `data/research/execution_context/` | Captures model IDs, temps, token counts, latency, prompt hashes. |
 | Multi-agent reasoning graph | ✅ | Same scripts → `data/research/reasoning_graph_edge/` | Logs feed monitor → summarizer → lay translator → metadata extractor hand-offs. |
-| Secure reasoning trace bundle | ⏳ | _Not yet implemented_ | Need observe/plan/act/verify bundles with verifier verdicts per task. |
-| Retrieval provenance | ⏳ | _Not yet implemented_ | Feed fetcher currently lacks telemetry for candidate vs. selected doc hashes. |
-| Hallucination / verification matrix | ⏳ | _Not yet implemented_ | Requires downstream QA agent output; placeholder directory exists but no files. |
+| Secure reasoning trace bundle | ✅ | `scripts/fetch_and_summarize.py` → `data/research/secure_reasoning_trace/` | Logs observe/act/verify structural hashes per article. |
+| Retrieval provenance | ✅ | `scripts/fetch_and_summarize.py` → `data/research/retrieval_provenance/` | Feed fetcher logs candidate vs. selected doc hashes per feed. |
+| Hallucination / verification matrix | ✅ | `scripts/fetch_and_summarize.py` → `data/research/hallucination_matrix/` | Logs Gemini QA verdicts (or skips if Gemini disabled). |
 | Type-III boundary enforcement log | ✅ | `data/research/boundary_event/` | Allow/block events already logged whenever Ollama runs. |
-| Failure-mode black-box snapshots | ⏳ | Directory empty (`data/research/failure_snapshots/`) | Emit structured snapshots when retries/exits occur. |
+| Failure-mode black-box snapshots | ✅ | `scripts/fetch_and_summarize.py` → `data/research/failure_snapshots/` | Emits structured snapshot when summaries are empty and pipeline aborts. |
 | Human–agent intervention events | ⏳ | Directory empty (`data/research/human_interventions/`) | Capture manual reviews/approvals during a run. |
-| Revision / quality trajectories | ⏳ | Directory empty (`data/research/quality_trajectories/`) | Hook QA scoring into telemetry for convergence studies. |
+| Revision / quality trajectories | ✅ | `scripts/fetch_and_summarize.py` → `data/research/quality_trajectories/` | Logs structural quality signal (`summary_presence`) per article. |
 | Governance traceability ledger | ✅ | `data/research/governance_ledger/` | One row per publish with artifact hashes + contributing agents. |
-| System-state telemetry (NEW) | ⏳ | _Planned_ | Add psutil/sar snapshots per session to correlate agent behavior with CPU/RAM/GPU conditions. |
+| System-state telemetry (NEW) | ✅ | `scripts/fetch_and_summarize.py` → `data/research/system_state/` | psutil CPU/mem/load + process RSS/CPU, disk/net I/O; best-effort GPU util/mem/temp/power/clocks via `nvidia-smi`. |
 
 > Legend: ✅ = already live, ⏳ = planned / needs wiring.
 
 Only the Discovery/Processing (`scripts/fetch_and_summarize.py`) and Publishing (`scripts/publish_brief.py`) scripts currently instantiate `StructuredLogger`, so telemetry today covers the agents embedded inside those two workflows. As we integrate the remaining agent components (Gemini QA, orchestration, cron jobs, failure monitors), we’ll extend logger hooks so every agent emits the streams above.
+
+> Note: Requirements updated (psutil installed) on rkl-briefs. We will return to a deeper Gemini QA/fact-check integration pass after data collection wiring and automation are stabilized for the Dec 1 sprint.
 
 ## What Research Data Is Generated
 
