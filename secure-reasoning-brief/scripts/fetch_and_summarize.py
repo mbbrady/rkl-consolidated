@@ -846,6 +846,7 @@ def main():
         try:
             gem_qamodel = os.getenv("GEMINI_QA_MODEL", "gemini-2.0-flash")
             gem_client = GeminiClient(model_name=gem_qamodel, research_logger=research_logger)
+            theme_threshold = float(os.getenv("GEMINI_THEME_THRESHOLD", "0.6"))
         except Exception as e:
             logger.warning(f"Gemini QA unavailable: {e}")
             return
@@ -854,7 +855,7 @@ def main():
             prompt = (
                 "Review the following technical summary and lay explanation of an article. "
                 "Return JSON with fields: verdict (pass/fail/uncertain), "
-                "confidence (0-1), error_type (none/hallucination/omission/format), notes (short). "
+                "confidence (0-1), error_type (none/hallucination/omission/format), secure_reasoning_score (0-1), secure_reasoning_verdict (keep/drop), notes (short). "
                 "Respond with JSON only.\n\n"
                 f"Technical summary:\n{article.get('technical_summary','')}\n\n"
                 f"Lay explanation:\n{article.get('lay_explanation','')}"
@@ -863,6 +864,8 @@ def main():
             confidence = 0.0
             error_type = "none"
             notes = ""
+            theme_score = None
+            theme_verdict = "keep"
             try:
                 resp = gem_client.generate(
                     prompt,
@@ -881,8 +884,18 @@ def main():
                     confidence = float(parsed.get("confidence", confidence))
                     error_type = parsed.get("error_type", error_type)
                     notes = parsed.get("notes", notes)
+                    theme_score = parsed.get("secure_reasoning_score", theme_score)
+                    theme_verdict = parsed.get("secure_reasoning_verdict", theme_verdict)
             except Exception as e:
                 logger.warning(f"Gemini QA parse failure on article {idx}: {e}")
+
+            # Apply theme gate if score present
+            keep_article = True
+            if theme_score is not None:
+                try:
+                    keep_article = float(theme_score) >= theme_threshold
+                except Exception:
+                    keep_article = True
 
             if research_logger and RKL_LOGGING_AVAILABLE:
                 research_logger.log("hallucination_matrix", {
@@ -892,10 +905,21 @@ def main():
                     "method": "gemini_qa",
                     "confidence": confidence,
                     "error_type": error_type,
-                    "notes": notes
+                    "notes": notes,
+                    "theme_score": theme_score,
+                    "theme_verdict": theme_verdict,
+                    "theme_threshold": theme_threshold
                 })
 
+            # Drop articles that fail the secure reasoning theme gate
+            if not keep_article:
+                logger.info(f"Dropping article {idx} for secure reasoning theme score {theme_score}")
+                summaries[idx-1]["_drop"] = True
+
     run_gemini_qa(summarized_articles)
+
+    # Filter out dropped articles if theme gate marked them
+    summarized_articles = [a for a in summarized_articles if not a.get("_drop")]
 
     # Validate summaries before proceeding
     invalid_articles = [

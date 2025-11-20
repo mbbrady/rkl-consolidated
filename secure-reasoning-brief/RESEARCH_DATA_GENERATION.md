@@ -25,7 +25,7 @@ This agentic system doesn't just solve a problem (generating AI governance brief
 | Multi-agent reasoning graph | ✅ | Same scripts → `data/research/reasoning_graph_edge/` | Logs feed monitor → summarizer → lay translator → metadata extractor hand-offs. |
 | Secure reasoning trace bundle | ✅ | `scripts/fetch_and_summarize.py` → `data/research/secure_reasoning_trace/` | Logs observe/act/verify structural hashes per article. |
 | Retrieval provenance | ✅ | `scripts/fetch_and_summarize.py` → `data/research/retrieval_provenance/` | Feed fetcher logs candidate vs. selected doc hashes per feed. |
-| Hallucination / verification matrix | ✅ | `scripts/fetch_and_summarize.py` → `data/research/hallucination_matrix/` | Logs Gemini QA verdicts (or skips if Gemini disabled). |
+| Hallucination / verification matrix | ✅ | `scripts/fetch_and_summarize.py` → `data/research/hallucination_matrix/` | Logs Gemini QA verdicts + secure reasoning theme score/gate (skips if Gemini disabled or no key). |
 | Type-III boundary enforcement log | ✅ | `data/research/boundary_event/` | Allow/block events already logged whenever Ollama runs. |
 | Failure-mode black-box snapshots | ✅ | `scripts/fetch_and_summarize.py` → `data/research/failure_snapshots/` | Emits structured snapshot when summaries are empty and pipeline aborts. |
 | Human–agent intervention events | ⏳ | Directory empty (`data/research/human_interventions/`) | Capture manual reviews/approvals during a run. |

@@ -13,6 +13,9 @@ HALLUCINATION_MATRIX_SCHEMA = {
         "confidence": (int, float),
         "evidence_doc_hashes": list,
         "error_type": str,
-        "notes": str
+        "notes": str,
+        "theme_score": (int, float, type(None)),
+        "theme_verdict": str,
+        "theme_threshold": (int, float, type(None))
     }
 }

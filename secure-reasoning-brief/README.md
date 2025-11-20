@@ -28,9 +28,9 @@ A comprehensive multi-agent system that generates weekly briefs on AI governance
    - `conda run -n rkl-briefs python scripts/fetch_and_summarize.py` succeeds locally, but this sandbox lacks outbound network so RSS pulls return zero rows—rerun the command on the worker itself to refill Articles 18–20.  
    - `scripts/fetch_and_summarize.py` now fails loudly (exit 1) if any article returns an empty technical or lay summary, so bad runs no longer produce “success” JSON.  
    - **Remaining:** Re-run the last 3 articles on the worker to replace Article 18–20 blanks (pipeline will enforce the checks automatically).
-3. **Gemini Integration (NOT YET INTEGRATED)**  
-   - `scripts/gemini_client.py` exists but is not referenced in either `fetch_and_summarize.py` or `publish_brief.py`.  
-   - Need a decision on how Gemini participates (QA validation, fallback model, or enhancement) plus plumbing and documentation to capture competition bonus points.
+3. **Gemini Integration (PARTIAL - QA hook present, needs API key to run)**  
+   - `scripts/fetch_and_summarize.py` now has an optional Gemini QA/verdict hook (logs to `hallucination_matrix`) gated by `ENABLE_GEMINI_QA` and `GOOGLE_API_KEY`.  
+   - To fully enable, set `ENABLE_GEMINI_QA=true` and a valid Google key; deeper integration pass planned after automation is stable.
 4. **Cron Automation (READY BUT UNVERIFIED)**  
    - Two jobs are configured (9:00 and 21:00) via `scripts/cron_pipeline_wrapper.sh`, targeting conda env `rkl-briefs` with logs under `logs/cron/`.  
    - Once the worker stays awake, run `crontab -l | grep rkl-phase0` and exercise a full automated cycle while tailing logs.
