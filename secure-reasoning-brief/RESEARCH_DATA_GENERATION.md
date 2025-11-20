@@ -39,6 +39,11 @@ Only the Discovery/Processing (`scripts/fetch_and_summarize.py`) and Publishing 
 
 > Note: Requirements updated (psutil installed) on rkl-briefs. We will return to a deeper Gemini QA/fact-check integration pass after data collection wiring and automation are stabilized for the Dec 1 sprint.
 
+## Publishing and Reproducibility Plan
+- **Git scope:** Keep code, configs, and docs in git; exclude generated data (`data/`, `content/briefs/`, `website/content/briefs/`) to avoid repo bloat. Cron/Test helpers can be versioned once finalized.
+- **Public datasets:** Export `data/research/*` (Parquet) to a HuggingFace dataset repo (and optionally Kaggle) with a README describing schemas, privacy constraints, and sample rows. Brief JSONs can be included as derived artifacts.
+- **Repro path:** Run pipeline on `work` with `rkl-briefs` env (`pip install -r requirements.txt`), set optional Gemini flags (`ENABLE_GEMINI_QA`, `GOOGLE_API_KEY`, `GEMINI_THEME_THRESHOLD`), then publish exported Parquet shards + manifest to HF/Kaggle for evaluation.
+
 ## What Research Data Is Generated
 
 ### 1. **Execution Context** (Model Performance Data)
