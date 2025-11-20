@@ -410,9 +410,10 @@ class FeedFetcher:
                  research_logger: Optional['StructuredLogger'] = None,
                  session_id: str = "unknown"):
         self.feeds_config = feeds_config
-        self.keywords = [kw.lower() for kw in keywords]
-        self.days_back = days_back
-        self.cutoff_date = datetime.now() - timedelta(days=days_back)
+        ignore_kw = os.getenv("BRIEF_IGNORE_KEYWORDS", "false").lower() in ("1", "true", "yes")
+        self.keywords = [] if ignore_kw else [kw.lower() for kw in keywords]
+        self.days_back = int(os.getenv("BRIEF_DAYS_BACK", str(days_back)))
+        self.cutoff_date = datetime.now() - timedelta(days=self.days_back)
         self.research_logger = research_logger
         self.session_id = session_id
 
