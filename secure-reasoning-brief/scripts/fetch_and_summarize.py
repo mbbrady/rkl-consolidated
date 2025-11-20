@@ -239,7 +239,7 @@ class ArticleSummarizer:
         self.client = ollama_client
         self.max_words = max_words
 
-def summarize_article(self, title: str, content: str, link: str,
+    def summarize_article(self, title: str, content: str, link: str,
                           session_id: Optional[str] = None, turn_id: Optional[int] = None) -> Dict:
         """
         Generate technical summary and lay explanation for an article.
