@@ -34,3 +34,7 @@ Thumbs.db
 # Environment
 .env
 .env.local
+# Generated data and briefs
+rkl-consolidated/secure-reasoning-brief/data/
+rkl-consolidated/secure-reasoning-brief/content/briefs/
+rkl-consolidated/secure-reasoning-brief/website/content/briefs/
