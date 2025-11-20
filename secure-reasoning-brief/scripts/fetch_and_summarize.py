@@ -417,6 +417,7 @@ class FeedFetcher:
         self.research_logger = research_logger
         self.session_id = session_id
         self.remote_fetch_host = os.getenv("REMOTE_FETCH_HOST", "").strip()
+        self.remote_fetch_user = os.getenv("REMOTE_FETCH_USER", "").strip()
 
     def fetch_feeds(self) -> List[Dict]:
         """
@@ -551,8 +552,11 @@ class FeedFetcher:
         """
         if self.remote_fetch_host:
             try:
+                host_target = self.remote_fetch_host
+                if self.remote_fetch_user:
+                    host_target = f"{self.remote_fetch_user}@{self.remote_fetch_host}"
                 raw = subprocess.check_output(
-                    ["ssh", self.remote_fetch_host, "curl", "-L", "-s", url],
+                    ["ssh", host_target, "curl", "-L", "-s", url],
                     stderr=subprocess.DEVNULL,
                     text=True,
                     timeout=30
