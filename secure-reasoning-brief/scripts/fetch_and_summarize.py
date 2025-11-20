@@ -555,13 +555,18 @@ class FeedFetcher:
                 host_target = self.remote_fetch_host
                 if self.remote_fetch_user:
                     host_target = f"{self.remote_fetch_user}@{self.remote_fetch_host}"
-                raw = subprocess.check_output(
-                    ["ssh", host_target, "curl", "-L", "-s", url],
-                    stderr=subprocess.DEVNULL,
-                    text=True,
-                    timeout=30
-                )
-                return feedparser.parse(raw)
+                cmd = [
+                    "ssh",
+                    "-o", "BatchMode=yes",
+                    "-o", "StrictHostKeyChecking=accept-new",
+                    host_target,
+                    "curl", "-L", "-s", url
+                ]
+                proc = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+                if proc.returncode != 0:
+                    logger.error(f"Remote fetch via {host_target} failed for {url}: rc={proc.returncode}, stderr={proc.stderr.strip()}")
+                    return feedparser.parse("")
+                return feedparser.parse(proc.stdout)
             except Exception as e:
                 logger.error(f"Remote fetch via {self.remote_fetch_host} failed for {url}: {e}")
                 return feedparser.parse("")  # empty
