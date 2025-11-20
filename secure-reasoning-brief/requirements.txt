@@ -4,6 +4,7 @@
 python-dotenv==1.0.0        # Environment variable management
 requests==2.31.0            # HTTP client for Ollama API
 feedparser==6.0.10          # RSS/Atom feed parsing
+numpy<2                     # Ensure wheels compatible with pandas/pyarrow in env
 
 # Configuration
 pyyaml==6.0.1              # YAML configuration support
