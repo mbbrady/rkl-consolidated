@@ -416,6 +416,7 @@ class FeedFetcher:
         self.cutoff_date = datetime.now() - timedelta(days=self.days_back)
         self.research_logger = research_logger
         self.session_id = session_id
+        self.remote_fetch_host = os.getenv("REMOTE_FETCH_HOST", "").strip()
 
     def fetch_feeds(self) -> List[Dict]:
         """
@@ -485,7 +486,7 @@ class FeedFetcher:
         articles = []
 
         try:
-            parsed = feedparser.parse(feed["url"])
+            parsed = self._fetch_parsed_feed(feed["url"])
 
             for entry in parsed.entries:
                 # Get article date
@@ -543,6 +544,25 @@ class FeedFetcher:
             logger.error(f"Error fetching feed {feed['name']}: {e}")
 
         return articles
+
+    def _fetch_parsed_feed(self, url: str):
+        """
+        Fetch and parse an RSS feed. If REMOTE_FETCH_HOST is set, fetch via SSH curl on that host.
+        """
+        if self.remote_fetch_host:
+            try:
+                raw = subprocess.check_output(
+                    ["ssh", self.remote_fetch_host, "curl", "-L", "-s", url],
+                    stderr=subprocess.DEVNULL,
+                    text=True,
+                    timeout=30
+                )
+                return feedparser.parse(raw)
+            except Exception as e:
+                logger.error(f"Remote fetch via {self.remote_fetch_host} failed for {url}: {e}")
+                return feedparser.parse("")  # empty
+        # Local fetch
+        return feedparser.parse(url)
 
 
 def main():
