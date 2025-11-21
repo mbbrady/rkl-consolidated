@@ -571,6 +571,7 @@ class FeedFetcher:
                 logger.error(f"Remote fetch via {self.remote_fetch_host} failed for {url}: {e}")
                 return feedparser.parse("")  # empty
         # Local fetch
+        logger.info(f"Fetching feed locally: {url}")
         return feedparser.parse(url)
 
 
@@ -630,11 +631,11 @@ def main():
         INFO - Summarizing 15 articles...
         INFO - Saved results to content/briefs/2025-11-16_articles.json
     """
-    # Load environment variables
-    load_dotenv()
+    # Load environment variables from project root
+    script_dir = Path(__file__).parent.parent
+    load_dotenv(dotenv_path=script_dir / ".env")
 
     # Get configuration
-    script_dir = Path(__file__).parent.parent
     config_dir = script_dir / "config"
 
     # Initialize research telemetry logger
