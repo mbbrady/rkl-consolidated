@@ -49,13 +49,30 @@ EXIT_CODE=$?
 echo "" >> "$LOG_FILE"
 echo "Exit code: $EXIT_CODE" >> "$LOG_FILE"
 
-# If successful, run health check
+# If successful, run health check and generate daily brief
 if [ $EXIT_CODE -eq 0 ]; then
     echo "" >> "$LOG_FILE"
     echo "Running health check..." >> "$LOG_FILE"
     $PYTHON_BIN scripts/health_check.py >> "$LOG_FILE" 2>&1
+
+    # Generate daily brief from most recent articles JSON
+    echo "" >> "$LOG_FILE"
+    echo "Generating daily brief..." >> "$LOG_FILE"
+    LATEST_JSON=$(ls -t content/briefs/*_articles.json 2>/dev/null | head -1)
+    if [ -n "$LATEST_JSON" ]; then
+        echo "Using: $LATEST_JSON" >> "$LOG_FILE"
+        $PYTHON_BIN scripts/generate_daily_brief.py "$LATEST_JSON" >> "$LOG_FILE" 2>&1
+        BRIEF_EXIT=$?
+        if [ $BRIEF_EXIT -eq 0 ]; then
+            echo "✅ Daily brief generated successfully" >> "$LOG_FILE"
+        else
+            echo "⚠️  Daily brief generation failed (exit code: $BRIEF_EXIT)" >> "$LOG_FILE"
+        fi
+    else
+        echo "⚠️  No articles JSON found - skipping daily brief" >> "$LOG_FILE"
+    fi
 else
-    echo "⚠️  Pipeline failed - skipping health check" >> "$LOG_FILE"
+    echo "⚠️  Pipeline failed - skipping health check and daily brief" >> "$LOG_FILE"
 fi
 
 # Keep only last 30 days of logs

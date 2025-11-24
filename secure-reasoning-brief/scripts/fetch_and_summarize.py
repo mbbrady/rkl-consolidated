@@ -119,7 +119,7 @@ class OllamaClient:
 
     def generate(self, prompt: str, system_prompt: Optional[str] = None,
                  agent_id: str = "unknown", session_id: Optional[str] = None,
-                 turn_id: Optional[int] = None) -> str:
+                 turn_id: Optional[int] = None, artifact_id: Optional[str] = None) -> str:
         """
         Send a prompt to Ollama and return the response.
 
@@ -184,7 +184,12 @@ class OllamaClient:
                     "tool_lat_ms": latency_ms,
                     "prompt_id_hash": sha256_text(prompt) if RKL_LOGGING_AVAILABLE else "",
                     "system_prompt_hash": sha256_text(system_prompt) if system_prompt and RKL_LOGGING_AVAILABLE else "",
-                    "token_estimation": "api" if prompt_tokens and gen_tokens else "word_count"
+                    "token_estimation": "api" if prompt_tokens and gen_tokens else "word_count",
+                    # Phase 1 Enhancement: Capture full prompts and responses for deeper analysis
+                    "prompt_preview": prompt[:1000] if prompt else "",
+                    "response_preview": generated_text[:1000] if generated_text else "",
+                    # Phase 2 Enhancement: Link to artifact for end-to-end tracing
+                    "artifact_id": artifact_id or ""
                 }
                 if seed_val is not None:
                     exec_record["seed"] = seed_val
@@ -270,6 +275,12 @@ class ArticleSummarizer:
             4. Return derived insights only (Type III safe)
         """
 
+        # Phase 2 Enhancement: Calculate artifact_id for end-to-end tracing
+        artifact_id = sha256_text(link) if RKL_LOGGING_AVAILABLE else ""
+
+        # Phase 2 Enhancement: Track timing for each step
+        step_timings = []
+
         # System prompt for technical summary - sets agent role
         system_prompt = """You are an AI research analyst specializing in verifiable AI,
 trustworthy AI, and AI governance. Provide concise, accurate technical summaries."""
@@ -279,13 +290,20 @@ trustworthy AI, and AI governance. Provide concise, accurate technical summaries
         content_for_llm = content[:8000]
 
         # Technical summary prompt - Agent #3: Summarizer
-        tech_prompt = f"""Summarize this article in {self.max_words} words or less, focusing on
-technical details and key findings:
+        # Phase 1 Enhancement: Chain-of-thought prompting for deeper reasoning traces
+        tech_prompt = f"""Analyze this AI research paper and create a technical summary.
+
+First, identify:
+1. Main contribution (1 sentence)
+2. Key methodology (1 sentence)
+3. Most important result (1 sentence)
+
+Then, combine these into a {self.max_words}-word technical summary focusing on what practitioners need to know.
 
 Title: {title}
 Content: {content_for_llm}
 
-Provide only the summary, no preamble."""
+Reasoning:"""
 
         # Log reasoning graph edge: feed_monitor → summarizer
         if self.client.research_logger and RKL_LOGGING_AVAILABLE:
@@ -298,16 +316,31 @@ Provide only the summary, no preamble."""
                 "to_agent": "summarizer",
                 "msg_type": "act",
                 "intent_tag": "tech_summary",
-                "content_hash": sha256_text(f"{title}|{content[:500]}")
+                "content_hash": sha256_text(f"{title}|{content[:500]}"),
+                # Phase 1 Enhancement: Add decision rationale
+                "decision_rationale": f"Article from {link[:50]}... passed keyword/date filter. Sending to summarizer for technical analysis.",
+                "payload_summary": f"Title: {title[:80]}... ({len(content_for_llm)} chars content)",
+                # Phase 2 Enhancement: Link to artifact for end-to-end tracing
+                "artifact_id": artifact_id
             })
 
         # PROCESSING: Local Ollama generates summary (Type III: raw data processed locally)
+        step_start = int(time.time() * 1000)
         technical_summary = self.client.generate(
             tech_prompt, system_prompt,
             agent_id="summarizer",
             session_id=session_id,
-            turn_id=turn_id
+            turn_id=turn_id,
+            artifact_id=artifact_id
         )
+        step_end = int(time.time() * 1000)
+        step_timings.append({
+            "phase": "act",
+            "agent_id": "summarizer",
+            "start_t": step_start,
+            "end_t": step_end,
+            "duration_ms": step_end - step_start
+        })
 
         # Lay explanation prompt
         lay_prompt = f"""Based on this article, explain in 2-3 sentences what this means for
@@ -329,15 +362,30 @@ Provide only the explanation, no preamble."""
                 "to_agent": "lay_translator",
                 "msg_type": "act",
                 "intent_tag": "lay_explanation",
-                "content_hash": sha256_text(technical_summary)
+                "content_hash": sha256_text(technical_summary),
+                # Phase 1 Enhancement: Add decision rationale
+                "decision_rationale": f"Technical summary complete ({len(technical_summary)} chars). Passing to lay translator for accessible explanation.",
+                "payload_summary": f"Summary: {technical_summary[:100]}...",
+                # Phase 2 Enhancement: Link to artifact for end-to-end tracing
+                "artifact_id": artifact_id
             })
 
+        step_start = int(time.time() * 1000)
         lay_explanation = self.client.generate(
             lay_prompt, system_prompt,
             agent_id="lay_translator",
             session_id=session_id,
-            turn_id=turn_id
+            turn_id=turn_id,
+            artifact_id=artifact_id
         )
+        step_end = int(time.time() * 1000)
+        step_timings.append({
+            "phase": "verify",
+            "agent_id": "lay_translator",
+            "start_t": step_start,
+            "end_t": step_end,
+            "duration_ms": step_end - step_start
+        })
 
         # Tag extraction prompt (use less content for speed since tags don't need full article)
         tag_prompt = f"""Extract 3-5 relevant tags from this article. Choose from:
@@ -361,15 +409,30 @@ Return only comma-separated tags, no explanation."""
                 "to_agent": "metadata_extractor",
                 "msg_type": "act",
                 "intent_tag": "tag_extraction",
-                "content_hash": sha256_text(f"{title}|{lay_explanation}")
+                "content_hash": sha256_text(f"{title}|{lay_explanation}"),
+                # Phase 1 Enhancement: Add decision rationale
+                "decision_rationale": f"Lay explanation complete ({len(lay_explanation)} chars). Ready for metadata extraction and tagging.",
+                "payload_summary": f"Lay text: {lay_explanation[:100]}...",
+                # Phase 2 Enhancement: Link to artifact for end-to-end tracing
+                "artifact_id": artifact_id
             })
 
+        step_start = int(time.time() * 1000)
         tags_raw = self.client.generate(
             tag_prompt, system_prompt,
             agent_id="metadata_extractor",
             session_id=session_id,
-            turn_id=turn_id
+            turn_id=turn_id,
+            artifact_id=artifact_id
         )
+        step_end = int(time.time() * 1000)
+        step_timings.append({
+            "phase": "observe",  # Metadata extraction is an observation step
+            "agent_id": "metadata_extractor",
+            "start_t": step_start,
+            "end_t": step_end,
+            "duration_ms": step_end - step_start
+        })
         tags = [tag.strip() for tag in tags_raw.split(",") if tag.strip()]
 
         return {
@@ -377,7 +440,9 @@ Return only comma-separated tags, no explanation."""
             "link": link,
             "technical_summary": technical_summary.strip(),
             "lay_explanation": lay_explanation.strip(),
-            "tags": tags[:5]  # Limit to 5 tags
+            "tags": tags[:5],  # Limit to 5 tags
+            # Phase 2 Enhancement: Return timing information for secure_reasoning_trace
+            "_step_timings": step_timings
         }
 
 
@@ -963,6 +1028,9 @@ def main():
         except Exception:
             pass
 
+        # Phase 1 Enhancement: Add pipeline-level agent state tracking
+        pipeline_status = "starting" if stage == "start_fetch" else "running" if "fetch" in stage else "completed"
+
         record = {
             "session_id": session_id,
             "stage": stage,
@@ -976,6 +1044,8 @@ def main():
             "mem_used_bytes": vm.used,
             "mem_free_bytes": vm.available,
             "mem_percent": vm.percent,
+            "pipeline_status": pipeline_status,
+            "current_phase": stage
         }
         if gpu_stats:
             record["gpus"] = gpu_stats
@@ -1036,44 +1106,93 @@ def main():
         summarized_articles.append(summary)
 
         # Telemetry: secure reasoning trace bundle (structural)
+        # Phase 2 Enhancement: Include timing data for each step
         if research_logger and RKL_LOGGING_AVAILABLE:
+            step_timings = summary.get("_step_timings", [])
+
+            # Build steps with timing information
+            steps = []
+
+            # Step 0: Metadata extraction (observe)
+            if len(step_timings) > 2:
+                timing = step_timings[2]  # metadata_extractor is 3rd step
+                steps.append({
+                    "step_index": 0,
+                    "phase": "observe",
+                    "agent_id": timing.get("agent_id", "metadata_extractor"),
+                    "input_hash": sha256_text(article["content"][:500]),
+                    "output_hash": sha256_text(article["summary"][:200]),
+                    "verifier_verdict": "n/a",
+                    "citations": [],
+                    "start_t": timing.get("start_t", 0),
+                    "end_t": timing.get("end_t", 0),
+                    "duration_ms": timing.get("duration_ms", 0)
+                })
+
+            # Step 1: Technical summary generation (act)
+            if len(step_timings) > 0:
+                timing = step_timings[0]  # summarizer is 1st step
+                steps.append({
+                    "step_index": 1,
+                    "phase": "act",
+                    "agent_id": timing.get("agent_id", "summarizer"),
+                    "input_hash": sha256_text(article["title"]),
+                    "output_hash": sha256_text(summary.get("technical_summary", "")),
+                    "verifier_verdict": "n/a",
+                    "citations": [],
+                    "start_t": timing.get("start_t", 0),
+                    "end_t": timing.get("end_t", 0),
+                    "duration_ms": timing.get("duration_ms", 0)
+                })
+
+            # Step 2: Lay explanation generation (verify)
+            if len(step_timings) > 1:
+                timing = step_timings[1]  # lay_translator is 2nd step
+                steps.append({
+                    "step_index": 2,
+                    "phase": "verify",
+                    "agent_id": timing.get("agent_id", "lay_translator"),
+                    "input_hash": sha256_text(summary.get("technical_summary", "")),
+                    "output_hash": sha256_text(summary.get("lay_explanation", "")),
+                    "verifier_verdict": "pending",
+                    "citations": [],
+                    "start_t": timing.get("start_t", 0),
+                    "end_t": timing.get("end_t", 0),
+                    "duration_ms": timing.get("duration_ms", 0)
+                })
+
             research_logger.log("secure_reasoning_trace", {
                 "session_id": session_id,
                 "task_id": sha256_text(article["link"]),
                 "turn_id": i,
-                "steps": [
-                    {
-                        "phase": "observe",
-                        "input_hash": sha256_text(article["content"][:500]),
-                        "output_hash": sha256_text(article["summary"][:200]),
-                        "verifier_verdict": "n/a",
-                        "citations": []
-                    },
-                    {
-                        "phase": "act",
-                        "input_hash": sha256_text(article["title"]),
-                        "output_hash": sha256_text(summary.get("technical_summary", "")),
-                        "verifier_verdict": "n/a",
-                        "citations": []
-                    },
-                    {
-                        "phase": "verify",
-                        "input_hash": sha256_text(summary.get("technical_summary", "")),
-                        "output_hash": sha256_text(summary.get("lay_explanation", "")),
-                        "verifier_verdict": "pending",
-                        "citations": []
-                    }
-                ]
+                "steps": steps
             })
+            # Phase 1+: Enhanced quality trajectories with dimensional scoring
+            tech_len = len(summary.get("technical_summary", ""))
+            lay_len = len(summary.get("lay_explanation", ""))
+            tags_count = len(summary.get("tags", []))
+
             research_logger.log("quality_trajectories", {
                 "session_id": session_id,
                 "artifact_id": sha256_text(article["link"]),
                 "version": 1,
                 "score_name": "summary_presence",
-                "score": 1.0 if summary.get("technical_summary") and summary.get("lay_explanation") else 0.0,
+                "score": 1.0 if tech_len > 0 and lay_len > 0 else 0.0,
                 "evaluator_id": "pipeline",
                 "reason_tag": "non_empty_fields",
-                "time_to_next_version": 0
+                "time_to_next_version": 0,
+                # Phase 1+: Quality dimensions
+                "quality_dimensions": {
+                    "completeness": 1.0 if (tech_len > 0 and lay_len > 0 and tags_count > 0) else 0.5,
+                    "technical_depth": min(tech_len / 600.0, 1.0),  # Expect ~600 chars for good depth
+                    "clarity": min(lay_len / 400.0, 1.0),  # Expect ~400 chars for good lay explanation
+                    "metadata_richness": min(tags_count / 5.0, 1.0)  # Expect ~5 tags
+                },
+                "metrics": {
+                    "technical_summary_length": tech_len,
+                    "lay_explanation_length": lay_len,
+                    "tags_count": tags_count
+                }
             })
 
     # Optional Gemini QA / hallucination matrix logging
@@ -1120,6 +1239,13 @@ Return JSON only:
   "quality_verdict": "pass|fail|uncertain",
   "quality_confidence": 0.0-1.0,
   "error_type": "none|hallucination|omission|misrepresentation",
+  "confidence_factors": {{
+    "summary_completeness": 0.0-1.0,
+    "technical_accuracy": 0.0-1.0,
+    "clarity": 0.0-1.0,
+    "source_alignment": 0.0-1.0
+  }},
+  "confidence_reasoning": "Explanation of confidence factors",
 
   "relevance_score": 0.0-1.0,
   "relevance_rationale": "Which secure reasoning aspects this addresses",
@@ -1160,6 +1286,9 @@ Return JSON only:
                     verdict = str(parsed.get("quality_verdict", verdict)).lower()
                     confidence = float(parsed.get("quality_confidence", confidence))
                     error_type = parsed.get("error_type", error_type)
+                    # Phase 1+: Confidence breakdown
+                    confidence_factors = parsed.get("confidence_factors", {})
+                    confidence_reasoning = parsed.get("confidence_reasoning", "")
 
                     # PART B: Original analysis
                     theme_score = parsed.get("relevance_score", theme_score)
@@ -1178,7 +1307,10 @@ Return JSON only:
                         "significance": significance,
                         "recommendation": recommendation,
                         "quality_verdict": verdict,
-                        "quality_confidence": confidence
+                        "quality_confidence": confidence,
+                        # Phase 1+: Enhanced confidence metrics
+                        "confidence_factors": confidence_factors,
+                        "confidence_reasoning": confidence_reasoning
                     }
 
                     # Legacy fields for filtering
