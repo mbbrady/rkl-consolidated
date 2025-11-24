@@ -1,5 +1,7 @@
 # Day 5 Course Alignment: Prototype to Production
 
+> **⚠️ Development Transparency:** This project was developed with extensive AI coding assistance (Claude Code, ChatGPT). The developer designed the architecture and telemetry schema; AI scaffolded implementation code.
+
 ## Executive Summary
 
 Day 5 of the Kaggle AI Agents course, "Prototype to Production," addresses the operational lifecycle of AI agents with emphasis on deployment, scaling, and productionization. The course introduces **AgentOps** as the discipline for bridging the "last mile" gap where 80% of effort is spent on infrastructure, security, and validation rather than core agent intelligence.

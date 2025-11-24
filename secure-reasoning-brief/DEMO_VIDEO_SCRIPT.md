@@ -8,19 +8,22 @@
 
 ## Script Outline
 
-### Opening (0:00 - 0:20) - 20 seconds
+### Opening (0:00 - 0:25) - 25 seconds
 **Visual:** Title card with RKL branding, fade to system architecture diagram
 
 **Narration:**
 > "AI practitioners face information overload - over 100 AI safety papers published weekly. We built an 18-agent system that solves this problem while demonstrating Type III compliance: provable secure reasoning where raw data never leaves local infrastructure."
+>
+> "Full transparency: This project was developed with extensive AI coding assistance - Claude Code and ChatGPT - under tight capstone deadlines. I designed the architecture and telemetry schema; AI scaffolded the implementation."
 
 **On-screen text:**
 - "Secure Reasoning Research Brief"
 - "18 Agents • Type III Compliance • Phase-0 Telemetry"
+- "⚠️ Built with AI assistance (Claude Code, ChatGPT)"
 
 ---
 
-### Problem Statement (0:20 - 0:40) - 20 seconds
+### Problem Statement (0:25 - 0:45) - 20 seconds
 **Visual:** Screen recording showing ArXiv feed scrolling (overwhelming volume of papers)
 
 **Narration:**
@@ -32,7 +35,7 @@
 
 ---
 
-### Architecture Overview (0:40 - 1:10) - 30 seconds
+### Architecture Overview (0:45 - 1:15) - 30 seconds
 **Visual:** Animated Mermaid diagram showing data flow
 
 **Narration:**
@@ -49,7 +52,7 @@
 
 ---
 
-### Demo - Daily Brief (1:10 - 1:35) - 25 seconds
+### Demo - Daily Brief (1:15 - 1:40) - 25 seconds
 **Visual:** Browser showing demo/daily_briefs.html, scroll through a daily brief
 
 **Narration:**
@@ -61,7 +64,7 @@
 
 ---
 
-### Demo - Weekly Synthesis (1:35 - 1:55) - 20 seconds
+### Demo - Weekly Synthesis (1:40 - 2:00) - 20 seconds
 **Visual:** Browser showing demo/weekly_synthesis.html, scroll to citations section
 
 **Narration:**
@@ -74,7 +77,7 @@
 
 ---
 
-### Telemetry Proof (1:55 - 2:25) - 30 seconds
+### Telemetry Proof (2:00 - 2:30) - 30 seconds
 **Visual:** Terminal showing:
 1. Directory tree of data/research/
 2. Quick cat of a governance_ledger file showing JSON with type3_verified: true
@@ -94,7 +97,7 @@
 
 ---
 
-### Real-World Impact (2:25 - 2:45) - 20 seconds
+### Real-World Impact (2:30 - 2:50) - 20 seconds
 **Visual:** Split screen: Daily brief on left, weekly blog on right
 
 **Narration:**
@@ -107,16 +110,18 @@
 
 ---
 
-### Closing (2:45 - 3:00) - 15 seconds
+### Closing (2:50 - 3:10) - 20 seconds
 **Visual:** Return to title card with RKL branding, show GitHub repo link
 
 **Narration:**
-> "Secure Reasoning Research Brief: proving that multi-agent AI systems can deliver real-world value with verifiable security guarantees. Thank you."
+> "Secure Reasoning Research Brief: proving that multi-agent AI systems can deliver real-world value with verifiable security guarantees."
+>
+> "This is an exploratory prototype built to learn. The deep code understanding will come through continued use. But the architecture works, the telemetry is real, and the transparency is honest. Thank you."
 
 **On-screen text:**
 - "Resonant Knowledge Lab"
-- "GitHub: [repository link]"
-- "resonantknowledgelab.org"
+- "Kaggle Datasets: bradyopenmaps/rkl-secure-reasoning-brief-telemetry"
+- "Built with AI assistance • Honest prototype • Real learning"
 
 **Fade to black**
 

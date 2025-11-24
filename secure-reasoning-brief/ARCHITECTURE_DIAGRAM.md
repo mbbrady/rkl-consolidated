@@ -1,5 +1,7 @@
 # Secure Reasoning Brief - System Architecture
 
+> **⚠️ Development Transparency:** This system was designed by a human (architecture, telemetry schema, integration decisions) and implemented with extensive AI coding assistance (Claude Code, ChatGPT). This is an honest exploratory prototype built for learning.
+
 ## Visual Architecture Diagram (Mermaid)
 
 ```mermaid

@@ -2,6 +2,8 @@
 
 **Kaggle AI Agents Capstone Competition - "Agents for Good" Track**
 
+> **⚠️ Development Transparency:** This project was developed with extensive AI coding assistance (Claude Code, ChatGPT) under tight time constraints. The developer designed the architecture, telemetry schema, and system integration; AI tools scaffolded most implementation code. This is an honest exploratory prototype built to learn what telemetry is valuable to collect. See "Development Process & AI Assistance" section below for full disclosure.
+
 > *Production-deployed multi-agent system demonstrating Type III Secure Reasoning with world-class research telemetry for AI safety science.*
 
 [![Competition Ready](https://img.shields.io/badge/Status-Production%20Deployed-success)](OPERATIONAL_STATUS.md)
@@ -299,6 +301,35 @@ This project generates **research-grade telemetry** for AI safety science:
 5. **Hallucination Detection**: Gemini QA results on diverse content
 
 **Researchers:** See `competition_submission/sample_telemetry/README.md` for data access.
+
+---
+
+## 💻 Development Process & AI Assistance
+
+**Transparency Statement**: This project was developed with extensive AI coding assistance (Claude Code, ChatGPT) under tight time constraints for the Kaggle AI Agents Capstone. I want to be completely transparent about this.
+
+**What I Did** (Human Decisions):
+- ✅ Designed the Type III Secure Reasoning architecture and boundary concepts
+- ✅ Determined what telemetry to capture and why (9 artifact types)
+- ✅ Made all integration and orchestration decisions
+- ✅ Formulated research questions and framed the problem
+- ✅ Designed the 18-agent system structure
+- ✅ Decided which models to use where (Ollama local, Gemini cloud)
+- ✅ Deployed and monitored production system
+
+**What AI Did** (Tool Assistance):
+- 🤖 Scaffolded most of the implementation code
+- 🤖 Generated boilerplate and helper functions
+- 🤖 Drafted documentation that I then edited
+- 🤖 Suggested implementation approaches I evaluated
+
+**Current Understanding Level**:
+- ✅ **Can explain**: High-level architecture, data flow, why each component exists, design tradeoffs
+- ⏳ **Still learning**: Detailed implementation of all helper functions, optimal schema refinements, advanced telemetry analysis
+
+**Why This Matters**: I built this to *learn* what data is valuable to collect and to understand multi-agent coordination. I cannot claim to fully understand every line of code—that deeper understanding will come through continued use and study after submission. This is an honest exploratory prototype, not a claim of production-ready perfection.
+
+**QA Status**: Basic testing done; comprehensive QA is future work beyond the capstone deadline.
 
 ---
 

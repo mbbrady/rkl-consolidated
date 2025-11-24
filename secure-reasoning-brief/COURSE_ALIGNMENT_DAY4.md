@@ -1,5 +1,7 @@
 # Day 4 Course Alignment: Agent Quality
 
+> **⚠️ Development Transparency:** This project was developed with extensive AI coding assistance (Claude Code, ChatGPT). The developer designed the architecture and telemetry schema; AI scaffolded implementation code.
+
 ## Executive Summary
 
 Day 4 of the Kaggle AI Agents course introduces **Agent Quality** as a fundamental paradigm shift from traditional software evaluation. The course emphasizes that agents operating in non-deterministic environments require new quality frameworks, evaluation methods, and observability approaches.

@@ -1,5 +1,7 @@
 # Course Alignment Synthesis: Days 1-5
 
+> **⚠️ Development Transparency:** This project was developed with extensive AI coding assistance (Claude Code, ChatGPT) under tight capstone deadlines. The developer designed the architecture, telemetry schema, and system integration; AI tools scaffolded most implementation code. This is an honest exploratory prototype built for learning.
+
 ## Executive Summary
 
 This document synthesizes the comprehensive analysis of all five days of the Kaggle AI Agents course material against the Secure Reasoning Research Brief project implementation. The analysis demonstrates **exceptional alignment** with course concepts through a **production-deployed multi-agent system** that embodies best practices in agent design, tool interoperability, multi-agent orchestration, quality evaluation, and operational deployment.

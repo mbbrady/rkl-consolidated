@@ -1,5 +1,7 @@
 # Course Alignment: Day 1 - Introduction to Agents
 
+> **⚠️ Development Transparency:** This project was developed with extensive AI coding assistance (Claude Code, ChatGPT). The developer designed the architecture and telemetry schema; AI scaffolded implementation code.
+
 **Secure Reasoning Research Brief vs. Day 1 Course Concepts**
 
 **Date:** November 22, 2025

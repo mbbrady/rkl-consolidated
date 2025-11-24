@@ -123,6 +123,13 @@ Thumbs.db
 *.rar
 
 # ------------------------------
+# Dataset Preparation Artifacts
+# ------------------------------
+dataset_release/
+datasets/telemetry-v1.0/telemetry_data/
+datasets/*.tar.gz
+
+# ------------------------------
 # Jupyter Notebooks (checkpoints)
 # ------------------------------
 .ipynb_checkpoints/

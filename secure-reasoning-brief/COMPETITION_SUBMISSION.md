@@ -380,13 +380,46 @@ This is more than a competition project - it's a **reference implementation** fo
 
 ---
 
+## Development Process & AI Assistance
+
+**Transparency Statement**: This project was developed with extensive AI coding assistance (Claude Code, ChatGPT) under tight time constraints. I want to be crystal clear about this for the competition judges.
+
+**What I Did** (Human Decisions):
+- Designed the Type III Secure Reasoning architecture and boundary concepts
+- Determined what telemetry to capture and why
+- Made all integration and orchestration decisions
+- Formulated research questions and framed the problem
+- Designed the 18-agent system structure
+- Decided which models to use where (Ollama local, Gemini cloud)
+
+**What AI Did** (Tool Assistance):
+- Scaffolded most of the implementation code
+- Generated boilerplate and helper functions
+- Drafted documentation that I then edited
+- Suggested implementation approaches I evaluated
+
+**Current Understanding Level**:
+- ✅ Can explain: High-level architecture, data flow, why each component exists, design tradeoffs
+- ⏳ Still learning: Detailed implementation of all helper functions, optimal schema refinements, advanced telemetry analysis
+
+**Why This Matters**: I built this to *learn* what data is valuable to collect and to understand multi-agent coordination. I cannot claim to fully understand every line of code—that deeper understanding will come through continued use and study after submission. This is an honest exploratory prototype, not a claim of production-ready perfection.
+
+**QA Status**: Basic testing done; comprehensive QA is future work beyond the capstone deadline.
+
+This transparency is intentional. The goal was learning through building, and I'm presenting what I actually built and understood in the available time.
+
+---
+
 ## Contact & Links
 
-**Team:** Resonant Knowledge Lab
+**Developer:** Michael B. Brady (Resonant Knowledge Lab)
 **Website:** [resonantknowledgelab.org](https://resonantknowledgelab.org)
 **Competition:** Kaggle 5-Day AI Agents Intensive Capstone
 **Demo:** [View HTML Demo](demo/index.html)
-**Repository:** [GitHub Repository Link - TBD]
+**Repository:** [GitHub - mbbrady/rkl-consolidated](https://github.com/mbbrady/rkl-consolidated)
+**Datasets:**
+- Kaggle: [bradyopenmaps/rkl-secure-reasoning-brief-telemetry](https://www.kaggle.com/datasets/bradyopenmaps/rkl-secure-reasoning-brief-telemetry)
+- HuggingFace: [rkl-org/rkl-secure-reasoning-brief-telemetry](https://huggingface.co/datasets/rkl-org/rkl-secure-reasoning-brief-telemetry)
 
 ---
 

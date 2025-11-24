@@ -1,5 +1,7 @@
 # Day 3 Course Alignment: Context Engineering, Sessions & Memory
 
+> **⚠️ Development Transparency:** This project was developed with extensive AI coding assistance (Claude Code, ChatGPT). The developer designed the architecture and telemetry schema; AI scaffolded implementation code.
+
 **Course:** Kaggle 5-Day AI Agents Intensive
 **Day 3 Topic:** Context Engineering: Sessions, Memory
 **Project:** Secure Reasoning Research Brief
