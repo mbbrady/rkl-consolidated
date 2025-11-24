@@ -8,42 +8,41 @@
 
 ## Script Outline
 
-### Opening (0:00 - 0:25) - 25 seconds
-**Visual:** Title card with RKL branding, fade to system architecture diagram
+### Opening (0:00 - 0:40) - 40 seconds
+**Visual:** Title card with "Mike Brady" + "RKL Secure Reasoning Brief", fade to architecture diagram
 
 **Narration:**
-> "AI practitioners face information overload - over 100 AI safety papers published weekly. We built an 18-agent system that solves this problem while demonstrating Type III compliance: provable secure reasoning where raw data never leaves local infrastructure."
+> "Hi, I'm Mike Brady. I work with sensitive research data that can't leave local infrastructure - and I thought others might be in the same boat."
 >
-> "Full transparency: This project was developed with extensive AI coding assistance - Claude Code and ChatGPT - under tight capstone deadlines. I designed the architecture and telemetry schema; AI scaffolded the implementation."
+> "For the Kaggle AI Agents Capstone, I built an 18-agent system that monitors AI safety papers and generates daily briefs - while demonstrating Type III Secure Reasoning: a framework where raw data never leaves local control, but derived insights can be shared."
+>
+> "Full transparency: I used AI coding assistants - Claude Code and ChatGPT - to scaffold the implementation. I designed the architecture and telemetry schema; AI helped me build it faster than I could alone."
 
 **On-screen text:**
-- "Secure Reasoning Research Brief"
-- "18 Agents • Type III Compliance • Phase-0 Telemetry"
-- "⚠️ Built with AI assistance (Claude Code, ChatGPT)"
+- "Mike Brady"
+- "RKL Secure Reasoning Brief"
+- "18 Agents • Type III Secure Reasoning"
+- "⚠️ Built with AI assistance"
 
 ---
 
-### Problem Statement (0:25 - 0:45) - 20 seconds
+### Problem & Solution (0:40 - 1:00) - 20 seconds
 **Visual:** Screen recording showing ArXiv feed scrolling (overwhelming volume of papers)
 
 **Narration:**
-> "Busy researchers need daily updates, not hundreds of papers. But existing AI summarization tools don't prove they handle sensitive data securely. Our solution automates research monitoring with a complete audit trail."
+> "The problem: AI researchers face 280 papers per week. The solution: automated monitoring with provable security guarantees. Raw articles processed locally; only summaries sent to cloud models for analysis."
 
 **On-screen text:**
-- "280 papers per week"
-- "Zero proof of secure handling"
+- "280 papers/week → Daily 2-min briefs"
+- "Local processing • Cloud analysis"
 
 ---
 
-### Architecture Overview (0:45 - 1:15) - 30 seconds
+### Architecture Overview (1:00 - 1:25) - 25 seconds
 **Visual:** Animated Mermaid diagram showing data flow
 
 **Narration:**
-> "Our system coordinates 18 specialized agents. Three feed monitors collect papers from ArXiv, AI Alignment Forum, and Google AI Blog. Local Ollama agents process the raw content - this is critical. Raw articles never leave our infrastructure."
-
-**Pause for emphasis**
-
-> "Cloud Gemini agents receive only derived summaries for expert analysis. This is Type III compliance: local processing for sensitive data, cloud processing for analysis."
+> "Our system coordinates 18 specialized agents across four phases: discovery, processing, quality analysis, and publication. Local Ollama agents process raw content. Cloud Gemini agents see only summaries. This is Type III Secure Reasoning: local processing for sensitive data, cloud for analysis."
 
 **On-screen text:**
 - "Local: Ollama (raw content)"
@@ -52,19 +51,19 @@
 
 ---
 
-### Demo - Daily Brief (1:15 - 1:40) - 25 seconds
+### Demo - Daily Brief (1:25 - 1:45) - 20 seconds
 **Visual:** Browser showing demo/daily_briefs.html, scroll through a daily brief
 
 **Narration:**
-> "The system runs twice daily at 9 AM and 9 PM. Each run produces a 2-3 minute executive brief highlighting breakthrough papers and emerging trends. Here's today's morning brief showing 6 papers analyzed, with the top 2 highlighted."
+> "The system runs twice daily. Each run produces a 2-3 minute executive brief highlighting breakthrough papers. Here's a morning brief showing 6 papers analyzed, with the top 2 must-reads highlighted."
 
 **On-screen text:**
-- "2x daily: 9 AM, 9 PM Eastern"
+- "2x daily: 9 AM, 9 PM"
 - "2-3 minute read"
 
 ---
 
-### Demo - Weekly Synthesis (1:40 - 2:00) - 20 seconds
+### Demo - Weekly Synthesis (1:45 - 2:05) - 20 seconds
 **Visual:** Browser showing demo/weekly_synthesis.html, scroll to citations section
 
 **Narration:**
@@ -77,18 +76,13 @@
 
 ---
 
-### Telemetry Proof (2:00 - 2:30) - 30 seconds
+### Telemetry Proof (2:05 - 2:30) - 25 seconds
 **Visual:** Terminal showing:
 1. Directory tree of data/research/
 2. Quick cat of a governance_ledger file showing JSON with type3_verified: true
-3. File count (375 files)
 
 **Narration:**
-> "How do we prove Type III compliance? Phase-0 Research Telemetry. Every agent interaction generates telemetry artifacts - 375 files over 5 days of operation. Here's a governance ledger file showing explicit verification: raw data exposed: false. This is the governance ledger for one run."
-
-**Pause to let judges see the JSON**
-
-> "Three core artifact types plus six enhancements document the complete system operation. This isn't just logging - it's provable compliance."
+> "How do we prove Type III compliance? Research telemetry. Every agent interaction generates telemetry artifacts - 441 files documenting 9 artifact types. Here's a governance ledger showing explicit verification: raw data exposed: false. This isn't just logging - it's provable compliance."
 
 **On-screen text:**
 - "375 telemetry files"
@@ -97,11 +91,11 @@
 
 ---
 
-### Real-World Impact (2:30 - 2:50) - 20 seconds
+### Real-World Impact (2:30 - 2:45) - 15 seconds
 **Visual:** Split screen: Daily brief on left, weekly blog on right
 
 **Narration:**
-> "This system is production-ready. Fully automated via cron, it transforms 280 papers per week into digestible updates. For practitioners: quick daily reads. For researchers: comprehensive weekly analysis. For organizations: a reference implementation for secure multi-agent systems."
+> "This system is production-ready. Fully automated via cron, it transforms 280 papers per week into digestible updates. For practitioners: quick daily reads. For researchers: comprehensive analysis."
 
 **On-screen text:**
 - "280 papers/week → 2 formats"
@@ -110,7 +104,7 @@
 
 ---
 
-### Closing (2:50 - 3:10) - 20 seconds
+### Closing (2:45 - 3:05) - 20 seconds
 **Visual:** Return to title card with RKL branding, show GitHub repo link
 
 **Narration:**
