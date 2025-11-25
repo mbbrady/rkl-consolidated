@@ -1,0 +1,62 @@
+graph TB
+    TITLE["<b>18-Agent Multi-Phase AI Research Brief System</b>"]
+
+    subgraph phase1["<b>Phase 1: Data Acquisition & Local Processing</b>"]
+        direction LR
+        RSS[RSS Feeds<br/>ArXiv • Alignment Forum<br/>Google AI Blog]
+        MONITOR[Monitor & Filter<br/>2x Daily]
+        LOCAL[<b>Local AI Processing</b><br/>Ollama llama3.2<br/><br/>GREEN BOX]
+        SUMM[Summaries &<br/>Metadata]
+
+        RSS --> MONITOR
+        MONITOR --> LOCAL
+        LOCAL --> SUMM
+    end
+
+    subgraph phase2["<b>Phase 2: Cloud Analysis & Scoring</b>"]
+        direction LR
+        CLOUD[<b>Cloud AI Analysis</b><br/>Gemini 2.0 Flash<br/><br/>ORANGE BOX]
+        SCORES[Quality Scores<br/>& Insights]
+
+        CLOUD --> SCORES
+    end
+
+    subgraph phase3["<b>Phase 3: Storage & Brief Generation</b>"]
+        direction LR
+        STORAGE[(Local Storage<br/>JSON Files<br/><br/>PURPLE BOX)]
+        BRIEFS[Generate Briefs<br/>Daily + Weekly]
+
+        STORAGE --> BRIEFS
+    end
+
+    subgraph phase4["<b>Phase 4: Publication</b>"]
+        direction LR
+        OUTPUT[HTML Demo<br/>Publishable Output<br/><br/>CYAN BOX]
+    end
+
+    TEL[<b>Telemetry System</b><br/>Phase-0 Artifacts<br/><br/>BLUE BOX]
+
+    SUMM --> CLOUD
+    SCORES --> STORAGE
+    STORAGE --> LOCAL
+    BRIEFS --> OUTPUT
+
+    LOCAL -.->|log| TEL
+    CLOUD -.->|log| TEL
+    BRIEFS -.->|log| TEL
+
+    TITLE --> phase1
+    phase1 --> phase2
+    phase2 --> phase3
+    phase3 --> phase4
+
+    style TITLE fill:#E3F2FD,stroke:#1976D2,stroke-width:3px
+    style phase1 fill:#F1F8E9,stroke:#689F38,stroke-width:2px
+    style phase2 fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
+    style phase3 fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px
+    style phase4 fill:#E0F7FA,stroke:#00838F,stroke-width:2px
+    style LOCAL fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
+    style CLOUD fill:#FF9800,stroke:#E65100,stroke-width:3px,color:#fff
+    style STORAGE fill:#9C27B0,stroke:#4A148C,stroke-width:2px,color:#fff
+    style OUTPUT fill:#00BCD4,stroke:#006064,stroke-width:2px,color:#fff
+    style TEL fill:#2196F3,stroke:#0D47A1,stroke-width:3px,color:#fff

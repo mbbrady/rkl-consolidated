@@ -1,0 +1,25 @@
+sequenceDiagram
+    participant RSS as RSS Feed
+    participant Local as Ollama (Local)
+    participant JSON as Local Storage
+    participant Cloud as Gemini (Cloud)
+    participant Output as Published Briefs
+
+    RSS->>Local: Raw Article Content (8000 chars)
+    activate Local
+    Local->>Local: Generate Technical Summary
+    Local->>Local: Generate Lay Explanation
+    Local->>JSON: Store: raw_content_excerpt
+    deactivate Local
+
+    Note over JSON: ❌ Raw content stays local
+
+    JSON->>Cloud: Send: summaries only
+    activate Cloud
+    Cloud->>Cloud: Analyze & Score
+    Cloud->>JSON: Return: quality scores
+    deactivate Cloud
+
+    JSON->>Output: Publish: derived briefs
+
+    Note over Output: ✅ Only summaries published

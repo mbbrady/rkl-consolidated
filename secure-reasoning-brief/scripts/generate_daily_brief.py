@@ -108,23 +108,31 @@ TODAY'S COLLECTION ({date}):
 - Top tags: {top_tags_str}
 - High priority: {len(high_priority)} papers
 
-YOUR DAILY BRIEF SHOULD:
+YOUR DAILY BRIEF SHOULD FOLLOW THIS STRUCTURE:
 
-1. **Must Read (2-3 papers max)**
+1. **Title** (compelling headline summarizing the day's theme)
+   - One concise sentence capturing what matters most today
+   - Examples: "Three Breakthroughs in Alignment Emerge" or "Robustness Research Dominates Today's Papers"
+
+2. **Key Takeaways** (3-5 bullet points at the top)
+   - The most important insights from today's collection
+   - What practitioners need to know RIGHT NOW
+   - Each bullet: one sentence, action-oriented
+   - This section answers: "What's the signal in today's noise?"
+   - Examples:
+     * "New adversarial attack defeats current defenses - review your safety margins"
+     * "Alignment research shows convergence on constitutional approaches"
+     * "Three papers warn of emergent capabilities in smaller models"
+
+3. **Must Read Papers** (2-3 papers max)
    - ONLY select breakthrough or important papers
-   - For each paper: One compelling sentence WHY it matters + one practical insight
-   - Include: Paper title, relevance score, significance level, link
+   - For each paper: Title, why it matters (1 sentence), practical insight (1 sentence), link
    - Keep it ultra-brief (2-3 sentences per paper)
 
-2. **Worth Tracking (brief section)**
+4. **Worth Tracking** (brief section)
    - Identify 1-2 emerging patterns (e.g., "3 papers exploring adversarial robustness")
    - List 3-5 other notable papers with one-line takeaways
    - Quick bullets only
-
-3. **Key Takeaway (one paragraph)**
-   - What's the signal in today's noise?
-   - Any urgent warnings or promising developments?
-   - What should practitioners focus on?
 
 CRITICAL STYLE REQUIREMENTS:
 - Ultra-concise: Each paper gets 2-3 sentences MAX
@@ -148,7 +156,14 @@ ARTICLES FROM TODAY:
 
 ---
 
-Write the daily brief in clean markdown format. Start with a header and snapshot section, then the three main sections described above.
+Write the daily brief in clean markdown format following this exact structure:
+
+1. Title (# heading - compelling, theme-focused)
+2. Key Takeaways section (## heading with 3-5 bullets)
+3. Must Read Papers section (## heading)
+4. Worth Tracking section (## heading)
+
+The Key Takeaways should be the FIRST thing readers see after the title.
 """
 
     return prompt

@@ -1,0 +1,61 @@
+graph TB
+    TITLE["<b>System Impact: Phase-0 Artifacts & Telemetry</b><br/><i>Complete Transparency for Research and Accountability</i>"]
+
+    subgraph phases["<b>4-Phase Architecture with Agent Mapping</b>"]
+        direction LR
+
+        P1["<b>Phase 1: Acquisition</b><br/>RSS Monitoring & Filtering<br/><br/><b>Agents:</b> None (scheduled task)"]
+
+        P2["<b>Phase 2: Local Processing</b><br/>Summary & Metadata Extraction<br/><br/><b>Agents (3):</b><br/>• Summary Agent<br/>• Lay Explanation Agent<br/>• Metadata Extraction Agent"]
+
+        P3["<b>Phase 3: Cloud Analysis</b><br/>Quality Assessment & Insights<br/><br/><b>Agents (15):</b><br/>• Quality Assessment (5x)<br/>• Insight Generation (5x)<br/>• Priority Scoring (3x)<br/>• Brief Writing (2x)"]
+
+        P4["<b>Phase 4: Publication</b><br/>Brief Generation & HTML Output<br/><br/><b>Agents:</b> Brief Writer agents"]
+
+        P1 --> P2
+        P2 --> P3
+        P3 --> P4
+    end
+
+    subgraph telemetry["<b>Telemetry Captures</b>"]
+        direction TB
+
+        BOUNDARY["<b>Boundary Events</b><br/>Phase transitions, API calls,<br/>data handoffs between components<br/><i>Why: Track system boundaries & data flow</i>"]
+
+        STATE["<b>System State</b><br/>Configuration, active agents,<br/>processing queue status<br/><i>Why: Understand system health & capacity</i>"]
+
+        RUNTIME["<b>Runtime Performance</b><br/>Execution times, latency, throughput<br/><i>Why: Monitor efficiency & bottlenecks</i>"]
+
+        TOKEN["<b>Token Usage</b><br/>Input/output tokens per operation<br/><i>Why: Track API costs & usage patterns</i>"]
+
+        QUALITY["<b>Quality Scores</b><br/>Relevance, technical depth, significance<br/><i>Why: Validate AI assessment accuracy</i>"]
+
+        ERROR["<b>Error Rates</b><br/>Failures, retries, recovery actions<br/><i>Why: Identify reliability issues</i>"]
+    end
+
+    subgraph storage["<b>Public Repositories</b>"]
+        direction LR
+        HF["HuggingFace<br/>Dataset"]
+        KAGGLE["Kaggle<br/>Competition"]
+    end
+
+    TITLE --> phases
+    phases --> telemetry
+    telemetry --> storage
+
+    style TITLE fill:#2196F3,stroke:#0D47A1,stroke-width:3px,color:#fff
+    style phases fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style telemetry fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
+    style storage fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style P1 fill:#E3F2FD,stroke:#1976D2,stroke-width:1px
+    style P2 fill:#C8E6C9,stroke:#4CAF50,stroke-width:1px
+    style P3 fill:#FFE0B2,stroke:#FF9800,stroke-width:1px
+    style P4 fill:#E0F7FA,stroke:#00838F,stroke-width:1px
+    style BOUNDARY fill:#FFF,stroke:#999,stroke-width:1px
+    style STATE fill:#FFF,stroke:#999,stroke-width:1px
+    style RUNTIME fill:#FFF,stroke:#999,stroke-width:1px
+    style TOKEN fill:#FFF,stroke:#999,stroke-width:1px
+    style QUALITY fill:#FFF,stroke:#999,stroke-width:1px
+    style ERROR fill:#FFF,stroke:#999,stroke-width:1px
+    style HF fill:#FFF,stroke:#999,stroke-width:1px
+    style KAGGLE fill:#FFF,stroke:#999,stroke-width:1px

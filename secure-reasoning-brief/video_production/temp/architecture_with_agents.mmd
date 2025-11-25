@@ -1,0 +1,49 @@
+graph LR
+    subgraph main["<b>System Architecture - 4 Phases</b>"]
+        direction LR
+
+        subgraph p1["Phase 1: Acquisition"]
+            RSS[RSS Feeds] --> MON[Monitor]
+            MON --> LOC[Local AI<br/>Processing]
+        end
+
+        subgraph p2["Phase 2: Analysis"]
+            CLD[Cloud AI<br/>Analysis]
+        end
+
+        subgraph p3["Phase 3: Storage"]
+            STO[(Storage)] --> BRF[Brief<br/>Generation]
+        end
+
+        subgraph p4["Phase 4: Publish"]
+            OUT[HTML<br/>Output]
+        end
+
+        LOC --> CLD
+        CLD --> STO
+        STO --> LOC
+        BRF --> OUT
+    end
+
+    subgraph agents["<b>18 AI Agents by Role</b>"]
+        direction TB
+
+        LOCAL["<b>LOCAL (3 agents)</b><br/>▪ Summary Agent<br/>▪ Lay Explanation Agent<br/>▪ Metadata Extraction Agent"]
+
+        CLOUD["<b>CLOUD (15 agents)</b><br/>▪ Quality Assessment Agents (5x)<br/>▪ Insight Generation Agents (5x)<br/>▪ Priority Scoring Agents (3x)<br/>▪ Brief Writing Agents (2x)"]
+    end
+
+    main --> agents
+
+    style main fill:#F5F5F5,stroke:#666,stroke-width:2px
+    style agents fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style p1 fill:#E3F2FD,stroke:#1976D2,stroke-width:1px
+    style p2 fill:#FFF3E0,stroke:#F57C00,stroke-width:1px
+    style p3 fill:#F3E5F5,stroke:#7B1FA2,stroke-width:1px
+    style p4 fill:#E0F7FA,stroke:#00838F,stroke-width:1px
+    style LOC fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#fff
+    style CLD fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
+    style STO fill:#9C27B0,stroke:#4A148C,stroke-width:2px,color:#fff
+    style OUT fill:#00BCD4,stroke:#006064,stroke-width:2px,color:#fff
+    style LOCAL fill:#C8E6C9,stroke:#4CAF50,stroke-width:2px
+    style CLOUD fill:#FFE0B2,stroke:#FF9800,stroke-width:2px

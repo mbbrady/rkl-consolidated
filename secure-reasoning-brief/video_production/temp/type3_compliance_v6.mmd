@@ -1,0 +1,49 @@
+flowchart LR
+    RSS[RSS Feeds<br/>Raw Article<br/>Content<br/>8000 chars]
+
+    subgraph local["          Local Infrastructure - Type III Compliant                                               "]
+        direction LR
+        OLLAMA[Ollama Local AI<br/><br/>• Technical Summaries<br/>• Lay Explanations<br/>• Metadata Extraction<br/>• Topic Tagging]
+        STORAGE[(Local Storage<br/><br/><b>Raw Content<br/>Stays Here</b>)]
+        OLLAMA -->|Store<br/>Raw| STORAGE
+        OLLAMA -->|Create<br/>Summaries| SUMM[Summaries &<br/>Metadata<br/><br/><i>Safe to share</i>]
+    end
+
+    subgraph cloud["          Cloud AI Analysis & Generation - Gemini 2.0 Flash                                        "]
+        direction TB
+        QA[Quality Assessment<br/>Relevance & Significance]
+        INSIGHT[Insight Generation<br/>Key Findings & Patterns]
+        SCORE[Priority Scoring<br/>Impact Classification]
+        WRITER[Brief Writer<br/><br/>• Daily Briefs<br/>• Weekly Synthesis<br/>• IEEE Citations]
+    end
+
+    OUTPUT[Published Output<br/><br/>HTML Demos<br/><i>Derived Insights Only</i>]
+
+    TEL[(Telemetry System<br/><br/>All Operations Logged)]
+
+    RSS -->|Raw<br/>Content| OLLAMA
+    SUMM -->|<b>Summaries ONLY</b><br/><b>NO Raw Content</b>| QA
+    SUMM --> INSIGHT
+    SUMM --> SCORE
+    QA -->|Results| STORAGE
+    INSIGHT -->|Results| STORAGE
+    SCORE -->|Results| STORAGE
+    STORAGE -->|Read<br/>Data| WRITER
+    WRITER --> OUTPUT
+
+    OLLAMA -.->|Log| TEL
+    QA -.->|Log| TEL
+    WRITER -.->|Log| TEL
+
+    style local fill:#FFE5E5,stroke:#D32F2F,stroke-width:3px
+    style cloud fill:#FFF8E1,stroke:#F57C00,stroke-width:3px
+    style STORAGE fill:#FFCDD2,stroke:#C62828,stroke-width:2px
+    style TEL fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    style OUTPUT fill:#FFF,stroke:#999,stroke-width:2px
+    style RSS fill:#FFF,stroke:#999,stroke-width:2px
+    style OLLAMA fill:#FFF,stroke:#999,stroke-width:2px
+    style SUMM fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style WRITER fill:#FFF,stroke:#999,stroke-width:2px
+    style QA fill:#FFF,stroke:#999,stroke-width:2px
+    style INSIGHT fill:#FFF,stroke:#999,stroke-width:2px
+    style SCORE fill:#FFF,stroke:#999,stroke-width:2px

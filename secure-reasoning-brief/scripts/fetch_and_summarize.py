@@ -48,6 +48,10 @@ from dotenv import load_dotenv
 import subprocess
 import platform
 
+# CRITICAL: Load .env BEFORE importing GeminiClient (which checks USE_VERTEX_AI)
+script_dir = Path(__file__).parent.parent
+load_dotenv(dotenv_path=script_dir / ".env")
+
 # Optional system metrics
 try:
     import psutil  # type: ignore
@@ -885,10 +889,7 @@ def main():
         INFO - Summarizing 15 articles...
         INFO - Saved results to content/briefs/2025-11-16_articles.json
     """
-    # Load environment variables from project root
-    script_dir = Path(__file__).parent.parent
-    load_dotenv(dotenv_path=script_dir / ".env")
-
+    # Environment variables already loaded at module level (line 52-53)
     # Get configuration
     config_dir = script_dir / "config"
 

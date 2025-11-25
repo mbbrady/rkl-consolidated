@@ -1,0 +1,8 @@
+file '../audio/FINAL/01-opening_v1.wav'
+file '../audio/FINAL/02-problem_v2.wav'
+file '../audio/FINAL/03-architecture_v1.wav'
+file '../audio/FINAL/04-daily-brief_v1.wav'
+file '../audio/FINAL/05-weekly-synthesis_v1.wav'
+file '../audio/FINAL/06-telemetry_v1.wav'
+file '../audio/FINAL/07-impact_v1.wav'
+file '../audio/FINAL/08-closing_v1.wav'

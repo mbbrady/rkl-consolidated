@@ -1,0 +1,16 @@
+flowchart LR
+    A[RSS Feeds] --> B[Monitor & Filter]
+    B --> C{Process Locally<br/>Ollama}
+    C --> D[Summaries]
+    D --> E{Analyze in Cloud<br/>Gemini}
+    E --> F[Quality Scores]
+    F --> G[Save JSON<br/>Local Only]
+    G --> H[Generate Briefs<br/>Publishable]
+    H --> I[HTML Demo]
+
+    C -.->|Telemetry| J[(Parquet Files)]
+    E -.->|Telemetry| J
+
+    style C fill:#4CAF50,stroke:#2E7D32,color:#fff
+    style E fill:#FF9800,stroke:#E65100,color:#fff
+    style J fill:#2196F3,stroke:#0D47A1,color:#fff

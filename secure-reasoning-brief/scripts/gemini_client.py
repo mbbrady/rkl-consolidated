@@ -41,6 +41,21 @@ except ImportError:
     GEMINI_AVAILABLE = False
     logger.warning("google-generativeai not installed. Gemini features will be unavailable.")
 
+# Import Vertex AI SDK if enabled
+USE_VERTEX_AI = os.getenv('USE_VERTEX_AI', 'false').lower() == 'true'
+if USE_VERTEX_AI:
+    try:
+        import vertexai
+        from vertexai.generative_models import GenerativeModel
+        VERTEX_AI_AVAILABLE = True
+        logger.info("Vertex AI SDK loaded - using paid tier")
+    except ImportError:
+        VERTEX_AI_AVAILABLE = False
+        logger.error("USE_VERTEX_AI=true but google-cloud-aiplatform not installed")
+        USE_VERTEX_AI = False
+else:
+    VERTEX_AI_AVAILABLE = False
+
 
 class GeminiClient:
     """
@@ -61,38 +76,67 @@ class GeminiClient:
     def __init__(self, model_name: str = "gemini-2.0-flash", api_key: Optional[str] = None,
                  research_logger: Optional['StructuredLogger'] = None):
         """
-        Initialize Gemini client.
+        Initialize Gemini client (AI Studio or Vertex AI).
 
         Args:
             model_name: Name of Gemini model to use
-            api_key: Optional API key (defaults to GOOGLE_API_KEY env var)
+            api_key: Optional API key (defaults to GOOGLE_API_KEY env var, ignored if Vertex AI)
             research_logger: Optional StructuredLogger for research telemetry
 
         Raises:
-            ImportError: If google-generativeai package not installed
-            ValueError: If API key not provided and not in environment
+            ImportError: If required SDK not installed
+            ValueError: If credentials not configured
         """
-        if not GEMINI_AVAILABLE:
-            raise ImportError(
-                "google-generativeai package required for Gemini integration. "
-                "Install with: pip install google-generativeai"
-            )
-
         self.model_name = model_name
-        self.api_key = api_key or os.getenv('GOOGLE_API_KEY')
         self.research_logger = research_logger
+        self.use_vertex_ai = USE_VERTEX_AI
 
-        if not self.api_key:
-            raise ValueError(
-                "GOOGLE_API_KEY not found. Set in environment or .env file. "
-                "Get key from: https://aistudio.google.com/app/apikey"
-            )
+        # Rate limiting (only for free tier AI Studio)
+        self.last_request_time = 0
+        self.min_request_interval = 0 if USE_VERTEX_AI else 4.5  # No limit for Vertex AI paid tier
 
-        # Configure Gemini API
-        genai.configure(api_key=self.api_key)
-        self.model = genai.GenerativeModel(self.model_name)
+        if USE_VERTEX_AI and VERTEX_AI_AVAILABLE:
+            # Vertex AI paid tier setup
+            project_id = os.getenv('VERTEX_AI_PROJECT_ID')
+            location = os.getenv('VERTEX_AI_LOCATION', 'us-central1')
+            credentials_path = os.getenv('VERTEX_AI_CREDENTIALS')
 
-        logger.info(f"Initialized Gemini client with model: {self.model_name}")
+            if not project_id:
+                raise ValueError("VERTEX_AI_PROJECT_ID not set in environment")
+            if not credentials_path or not Path(credentials_path).exists():
+                raise ValueError(f"VERTEX_AI_CREDENTIALS not found: {credentials_path}")
+
+            # Set credentials environment variable for Vertex AI
+            os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
+
+            # Initialize Vertex AI
+            vertexai.init(project=project_id, location=location)
+            self.model = GenerativeModel(self.model_name)
+
+            logger.info(f"✅ Initialized Vertex AI client (PAID TIER - NO RATE LIMITING)")
+            logger.info(f"   Project: {project_id}, Location: {location}, Model: {self.model_name}")
+
+        else:
+            # AI Studio free tier setup
+            if not GEMINI_AVAILABLE:
+                raise ImportError(
+                    "google-generativeai package required. "
+                    "Install with: pip install google-generativeai"
+                )
+
+            self.api_key = api_key or os.getenv('GOOGLE_API_KEY')
+            if not self.api_key:
+                raise ValueError(
+                    "GOOGLE_API_KEY not found. Set in environment or .env file. "
+                    "Get key from: https://aistudio.google.com/app/apikey"
+                )
+
+            # Configure AI Studio
+            genai.configure(api_key=self.api_key)
+            self.model = genai.GenerativeModel(self.model_name)
+
+            logger.info(f"Initialized AI Studio client (FREE TIER - Rate limited)")
+            logger.info(f"Rate limiting: {self.min_request_interval}s between requests")
 
     def generate(
         self,
@@ -143,20 +187,39 @@ class GeminiClient:
             })
 
         try:
+            # Rate limiting: only for free tier AI Studio
+            if self.min_request_interval > 0:
+                time_since_last_request = time.time() - self.last_request_time
+                if time_since_last_request < self.min_request_interval:
+                    sleep_time = self.min_request_interval - time_since_last_request
+                    logger.info(f"Rate limiting: sleeping {sleep_time:.2f}s before API call")
+                    time.sleep(sleep_time)
+
             # Combine system prompt and user prompt if both provided
             full_prompt = prompt
             if system_prompt:
                 full_prompt = f"{system_prompt}\n\n{prompt}"
 
             # Configure generation parameters
-            generation_config = genai.types.GenerationConfig(
-                temperature=temperature,
-                max_output_tokens=max_tokens,
-                **kwargs
-            )
+            if self.use_vertex_ai:
+                # Vertex AI uses different config format
+                from vertexai.generative_models import GenerationConfig
+                generation_config = GenerationConfig(
+                    temperature=temperature,
+                    max_output_tokens=max_tokens if max_tokens else 8192
+                )
+            else:
+                # AI Studio config
+                generation_config = genai.types.GenerationConfig(
+                    temperature=temperature,
+                    max_output_tokens=max_tokens,
+                    **kwargs
+                )
 
             # Generate response
-            logger.debug(f"Calling Gemini API with prompt length: {len(full_prompt)} chars")
+            api_type = "Vertex AI" if self.use_vertex_ai else "AI Studio"
+            logger.debug(f"Calling {api_type} with prompt length: {len(full_prompt)} chars")
+            self.last_request_time = time.time()  # Update timestamp before call
             response = self.model.generate_content(
                 full_prompt,
                 generation_config=generation_config
@@ -164,7 +227,7 @@ class GeminiClient:
 
             # Extract text from response
             if not response or not response.text:
-                logger.warning("Gemini returned empty response")
+                logger.warning(f"{api_type} returned empty response")
                 return ""
 
             # Calculate metrics

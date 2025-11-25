@@ -1,0 +1,44 @@
+flowchart TB
+    subgraph boundary[" "]
+        direction TB
+        RSS[RSS Feeds<br/>Raw Article Content<br/>8000 chars]
+
+        subgraph local[Local Infrastructure - Type III Compliant]
+            direction TB
+            OLLAMA[Ollama Local AI<br/>• Generate Summaries<br/>• Extract Metadata<br/>• Create Tags]
+            STORAGE[(Local Storage<br/>Raw Content<br/>Stays Here)]
+            WRITER[Brief Writer<br/>• Daily Briefs<br/>• Weekly Blogs]
+        end
+
+        subgraph cloud[Cloud Services]
+            direction TB
+            GEMINI[Gemini Cloud AI<br/>• Quality Assessment<br/>• Expert Analysis<br/>• Priority Scoring<br/>• Insight Generation]
+        end
+
+        OUTPUT[Published Output<br/>HTML Demos<br/>Only Derived Insights]
+
+        TEL[(Telemetry System<br/>All Operations Logged)]
+    end
+
+    RSS -->|Raw Content| OLLAMA
+    OLLAMA -->|Store Raw| STORAGE
+    OLLAMA -->|Summaries Only<br/>NO Raw Content| GEMINI
+    GEMINI -->|Scores & Insights| STORAGE
+    STORAGE -->|Read Data| WRITER
+    WRITER --> OUTPUT
+
+    OLLAMA -.->|Log| TEL
+    GEMINI -.->|Log| TEL
+    WRITER -.->|Log| TEL
+
+    style local fill:#E8F5E9,stroke:#4CAF50,stroke-width:3px
+    style cloud fill:#FFF3E0,stroke:#FF9800,stroke-width:3px
+    style STORAGE fill:#FCE4EC,stroke:#E91E63,stroke-width:2px
+    style TEL fill:#E3F2FD,stroke:#2196F3,stroke-width:2px
+    style OUTPUT fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px
+
+    classDef localNode fill:#C8E6C9,stroke:#2E7D32,stroke-width:2px
+    classDef cloudNode fill:#FFE0B2,stroke:#E65100,stroke-width:2px
+
+    class OLLAMA,WRITER localNode
+    class GEMINI cloudNode
