@@ -1,6 +1,6 @@
 # Operational Status - Secure Reasoning Brief Pipeline
 
-**Last Updated**: 2025-11-22 14:35 EST
+**Last Updated**: 2025-11-30 15:16 EST
 
 ## Production Deployment Status
 
@@ -28,6 +28,28 @@ The Secure Reasoning Brief pipeline is running in full production mode with auto
 | 2025-11-20 | 4 | 09:00, 21:00, 22:02, 22:05 | ✅ |
 | 2025-11-21 | 2 | 09:00, 21:00 | ✅ |
 | 2025-11-22 | 1 | 09:00 (evening run at 21:00 pending) | ✅ |
+
+### Recent Incident: Disk-Full Backfill (Nov 29-30)
+
+On **2025-11-29–2025-11-30**, the `/home` partition on the client filled to 100% during scheduled runs. Symptoms:
+
+- Cron wrapper logs for `2025-11-29_0900`, `2025-11-29_2100`, and `2025-11-30_0900` were created as 0-byte files
+- Corresponding briefs in `content/briefs` (`*_articles.json`) were also 0 bytes and not valid JSON
+- Phase-0 telemetry in `data/research` had already been written correctly for prior sessions, so telemetry was left unchanged
+
+Remediation on **2025-11-30**:
+
+- A one-time backfill duplicated the last successful briefs:
+  - `2025-11-29_0900_articles.json` from `2025-11-28_0900_articles.json`
+  - `2025-11-29_2100_articles.json` from `2025-11-28_2100_articles.json`
+  - `2025-11-30_0900_articles.json` from `2025-11-28_0900_articles.json`
+- Each backfilled JSON has an explicit `metadata.backfill` record documenting:
+  - `is_backfill = true`
+  - `source_run` (original file used)
+  - `reason` (disk-full incident, original JSON was 0 bytes)
+  - `method` (content duplicated; telemetry left unchanged)
+
+This preserves a complete, machine-readable week of briefs for weekly synthesis while clearly marking the affected sessions for downstream analysis.
 
 ## Automated Schedule
 

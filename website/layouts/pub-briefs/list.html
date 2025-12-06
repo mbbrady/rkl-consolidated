@@ -1,0 +1,55 @@
+{{ define "body_classes" }}page-default-list{{ end }}
+
+{{ define "main" }}
+{{ $pubBriefs := .Pages }}
+{{ $sortedBriefs := sort $pubBriefs "Date" "desc" }}
+{{ $latestBrief := index $sortedBriefs 0 }}
+
+{{ if $latestBrief }}
+<section class="strip strip-grey fade-section">
+  <div class="container pt-6 pb-6 pb-md-10">
+    <div class="row">
+      <div class="col-12 col-lg-9">
+        <p class="eyebrow text-muted mb-2">Latest Research Brief</p>
+        <h1 class="mb-2">{{ $latestBrief.Title }}</h1>
+        <p class="text-muted mb-3">
+          {{ $latestBrief.Date.Format "January 2, 2006" }}
+        </p>
+        <div class="latest-brief-content">
+          {{ $latestBrief.Content }}
+        </div>
+      </div>
+      <div class="col-12 col-lg-3 mt-4 mt-lg-0">
+        <div class="card p-3 h-100">
+          <h2 class="h5 mb-2">About These Briefs</h2>
+          {{ with .Content }}
+          <div class="small text-muted">
+            {{ . }}
+          </div>
+          {{ end }}
+          <p class="small text-muted mt-2 mb-0">
+            Produced by the RKL Secure Reasoning Brief Agent and published under secure reasoning principles.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{ if gt (len $sortedBriefs) 1 }}
+<div class="container pt-4 pb-md-12">
+  <div class="row">
+    <div class="col-12 mb-3">
+      <h2>More Research Briefs</h2>
+    </div>
+    {{ range after 1 $sortedBriefs }}
+    <div class="col-12 col-md-6 mb-2">
+      {{ .Render "summary" }}
+    </div>
+    {{ end }}
+  </div>
+</div>
+{{ end }}
+{{ end }}
+

@@ -1,2 +1,0 @@
-file '01_title.mp4'
-file '02_narration.mp4'

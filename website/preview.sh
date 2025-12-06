@@ -2,7 +2,7 @@
 # Quick preview script - forces Chrome to reload with no cache
 
 # Build the site
-cd /home/mike/project/rkl/rkl.org
+cd /home/mike/project/rkl-consolidated/website
 hugo --quiet
 
 # Open in Chrome with no cache (incognito mode)

@@ -185,6 +185,31 @@ This would require significant refactoring and would increase:
 
 The system demonstrates **operational telemetry** (who did what, when) but not **cognitive telemetry** (how they reasoned about it).
 
+### Backfill Note: Nov 29-30 Disk-Full Incident
+
+On **2025-11-29–2025-11-30**, a disk-full condition on `/home` caused three scheduled runs to write 0-byte brief JSON files and empty cron logs:
+
+- `content/briefs/2025-11-29_0900_articles.json`
+- `content/briefs/2025-11-29_2100_articles.json`
+- `content/briefs/2025-11-30_0900_articles.json`
+
+Phase-0 telemetry in `data/research` (execution_context, reasoning_graph_edge, boundary_event, governance_ledger, etc.) had already been written correctly for prior sessions and was left unchanged.
+
+On **2025-11-30**, these three briefs were backfilled to preserve a complete, machine-readable week for weekly synthesis:
+
+- `2025-11-29_0900_articles.json` duplicated from `2025-11-28_0900_articles.json`
+- `2025-11-29_2100_articles.json` duplicated from `2025-11-28_2100_articles.json`
+- `2025-11-30_0900_articles.json` duplicated from `2025-11-28_0900_articles.json`
+
+Each affected JSON now includes a `metadata.backfill` record describing:
+
+- `is_backfill = true`
+- `source_run` (original file used)
+- `reason` (disk-full, original JSON 0 bytes)
+- `method` (content duplicated; telemetry unchanged)
+
+Downstream consumers can use this flag to treat these three briefs as approximate stand-ins rather than independent observations.
+
 ---
 
 ## File Locations

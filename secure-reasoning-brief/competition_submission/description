@@ -1,0 +1,181 @@
+# Kaggle AI Agents Intensive - Capstone Submission
+
+**Project:** Secure Reasoning Research Brief - Type III Multi-Agent System
+**Author:** Mike Brady | Resonant Knowledge Lab
+**Submission Date:** November 28, 2025
+
+---
+
+## Problem Statement
+
+Organizations that steward sensitive data (hospitals, public agencies, research labs) face a dilemma: they need AI reasoning, but most tooling assumes you will upload raw data to external cloud models where consent, control, and auditability are weak. Once data crosses that boundary, it is hard to prove how it was used or whether it was retained.
+
+This project fits the **Agents for Good** track by tackling that governance problem head-on. I prototype a **Type III secure reasoning** pattern: raw content is processed locally under explicit control, only derived summaries cross a carefully logged boundary to cloud AI, and every step generates research-grade telemetry. The goal is to make it practical for organizations to leverage powerful cloud models without exposing their protected raw data, while still being able to audit how agents reasoned.
+
+For the capstone, I apply this pattern to public AI safety papers—treating their text as a proxy for sensitive corpora—to collect telemetry that lets me study agentic behavior while refining the Type III reasoning protocol. An 18-agent system generates a daily brief and weekly blog that summarize large volumes of AI safety work for practitioners, and also produces a telemetry dataset that captures how the system coordinates and makes this Type III boundary auditable in practice.
+
+---
+
+## Why Agents?
+
+Agents are essential for this problem because it requires **coordinated specialization across a trust boundary**.
+
+### Single-model approaches fall short
+
+- One **local** model can’t match cloud AI quality for complex analysis.
+- One **cloud** model can’t access raw data without violating security.
+- A simple linear pipeline can’t adapt to content quality, handle failures, or enforce governance rules at each step.
+
+### Why multi-agent coordination works
+
+1. **Specialization**  
+   Different agents do what they’re best at. Local agents (Ollama llama3.2:3b) handle ingestion, filtering, and summarization—tasks that smaller models can do reliably. Cloud agents (Gemini 2.0) handle quality assessment, synthesis, and meta-analysis—where reasoning power matters most.
+
+2. **Trust boundaries**  
+   Agents encode the Type III boundary in their roles and tools. Local agents never send raw content onward. Cloud agents never request it. The handoff point (derived-only summaries) is enforced in the architecture, not just in a policy document.
+
+3. **Governance by design**  
+   Dedicated monitoring and logging agents verify compliance automatically. Every data flow is logged; every boundary crossing generates a record in the governance ledger. Potential violations can be detected and alerted on without manual inspection.
+
+4. **Resilience**  
+   If one agent fails (API timeout, bad response, low quality), others can retry, route around it, or fall back to a simpler path. The system degrades gracefully instead of an all-or-nothing monolithic call.
+
+5. **Observability**  
+   Agent-to-agent handoffs create natural audit points. Phase‑0 telemetry captures execution context, reasoning edges, boundary events, and governance ledger entries. This fine-grained trace is almost impossible to get from a single opaque model call.
+
+In short, the **18‑agent architecture** makes the Type III boundary enforceable and observable and turns the system into a source of structured telemetry for studying secure reasoning.
+
+---
+
+## What I Created
+
+### System Overview
+
+I built an **18-agent architecture** that monitors AI research, generates daily briefs and weekly blogs, and maintains **provable Type III compliance**. It runs on my homelab cluster (Betty/Wilma nodes) with local Ollama + cloud Gemini. For this capstone, a subset of these agents run as a scheduled daily job; the rest are stubs that show how the pattern scales out.
+
+Each run not only generates briefs but also logs structured telemetry, creating a reusable dataset for studying multi-agent secure reasoning in practice.
+
+### Four-Phase Architecture
+
+**Phase 1: Discovery (3 agents) – All Local**
+
+- **Feed Monitor** – Scrapes ArXiv, AI Alignment Forum, and research blogs via RSS.
+- **Content Filter** – Pre-filters using keywords (AI safety, alignment, secure reasoning).
+- **Source Credibility** – Assesses reliability *(planned — currently manual heuristics)*.
+
+**Phase 2: Processing (6 agents) – All Local, Raw Data Stays Here**
+
+- **Technical Summarizer** – 8000 chars → ~600 char technical summary (Ollama).
+- **Translation Agent** – Technical → plain language (~400 chars) (Ollama).
+- **Metadata Extractor** – Extracts topics, themes, citations (Ollama).
+- **Relationship Analyzer** – Connects related papers *(planned)*.
+- **Theme Synthesizer** – Identifies patterns across papers *(planned)*.
+- **Recommendation Generator** – Generates action items for practitioners *(planned)*.
+
+**Phase 3: Governance & QA (3 agents) – Cloud AI, Summaries Only**
+
+- **QA Reviewer** – Quality-checks summaries (Gemini sees summaries only).
+- **Terminology Compliance** – Verifies consistent framework terminology *(planned)*.
+- **Fact Checker** – Cross-references claims and citations *(planned)*.
+
+**Phase 4: Publication (3 agents) – Output Generation**
+
+- **Brief Composer** – Assembles the final daily brief with IEEE-style citations (Gemini).
+- **Git Publisher** – Commits and pushes to GitHub.
+- **Archive Manager** – Maintains a searchable archive *(planned)*.
+
+**Cross-Phase: Monitoring & Education (3 agents) – Continuous Oversight**
+
+- **Performance Monitor** – Tracks system health *(planned)*.
+- **Governance Auditor** – Verifies Type III compliance *(planned)*.
+- **Education Generator** – Creates teaching materials from telemetry *(planned)*.
+
+### Key Innovation: The Type III Boundary
+
+The critical architectural element is the **handoff point between Phase 2 and Phase 3**. Local agents operate on raw content inside a trusted environment. They emit structured summaries and metadata. Cloud agents receive *only* those derived objects.
+
+This boundary is enforced by a `HybridModelClient` that routes requests to **Ollama** or **Gemini** based on data classification. Raw text never leaves the local side; Gemini never sees original documents.
+
+Every boundary crossing generates a `boundary_event` telemetry artifact, for example:
+
+```json
+{
+  "rule_id": "type3.external_api.gemini",
+  "action": "allow",
+  "data_type": "summary",
+  "raw_data_included": false,
+  "timestamp": "2025-11-18T12:34:56Z"
+}
+```
+
+### Phase-0 Research Telemetry
+
+Every pipeline run generates **9 types of research artifacts**:
+1. Execution Context - Every LLM call
+2. Reasoning Graph Edge - Agent handoffs
+3. Boundary Event - Type III crossings
+4. Secure Reasoning Trace - Complete thought processes
+5. Quality Trajectories - Quality evolution
+6. Hallucination Matrix - Claims verification
+7. Retrieval Provenance - Source tracking
+8. Governance Ledger - Audit trail
+9. System State - Health monitoring
+
+**Total collected:** 538 files, 7.42 MB, spanning Nov 18-28, 2025 (11 days).
+**Published:** HuggingFace and Kaggle datasets for AI science and benchmarking.
+
+I treat this telemetry as a standalone dataset: it enables research into multi-agent coordination, secure reasoning architectures, and AI governance. Over time, I plan to automate exports so this research corpus grows continuously as the system runs in production.
+
+---
+
+## Demo
+
+**Watch the 3‑minute demo video** (linked in the Kaggle submission).
+
+The demo walks through:
+
+1. **Daily brief generation**  
+   A scheduled run processes up to ~20 AI safety papers and produces a 2–3 minute brief with headline findings, must‑read papers, and emerging patterns. I walk through the agent flow on the homelab cluster and show a sample generated Markdown brief.
+
+2. **Weekly synthesis (Type III in action)**  
+   Gemini uses only stored summaries (not raw text) to write a comprehensive weekly blog. The video shows how the `HybridModelClient` routes calls: raw text stays on the local side; Gemini only ever sees derived summaries, demonstrating the Type III secure reasoning boundary.
+
+3. **Telemetry proof**  
+   The Phase‑0 telemetry files and the daily manifest provide machine‑readable, time‑stamped evidence that:
+   - every LLM call is logged (`execution_context`),
+   - every agent‑to‑agent handoff is captured (`reasoning_graph_edge`),
+   - every boundary crossing is recorded (`boundary_event`),
+   - every published brief has an audit trail (`governance_ledger`).
+
+**Live deployment:** the system runs via cron at **9 AM and 9 PM daily**. Code, telemetry pipeline, and sample outputs are available here:
+
+- GitHub: https://github.com/mbbrady/secure-reasoning-brief-clean
+
+---
+
+## The Build
+
+### Technologies Used
+
+**AI Models**
+- **Ollama `llama3.2:3b` (local)** – Local summarization on raw text (“inside the firewall” engine).
+- **Google Gemini 2.0 Flash (cloud)** – QA and synthesis on summaries only.
+
+**Infrastructure**
+- **Python 3.11** – Core pipeline and orchestration.
+- **RSS + feedparser** – Ingests ArXiv, AI Alignment Forum, and research blogs.
+- **SQLite** – Deduplication and run tracking.
+- **Apache Parquet + NDJSON** – Telemetry storage and inspection.
+- **Cron** – Twice‑daily scheduling on the homelab cluster.
+- **Git + GitHub / GitHub Actions** – Version control and automated publishing.
+
+**Telemetry & AgentOps**
+- **`rkl_logging.StructuredLogger`** – Writes Phase‑0 artifacts (`execution_context`, `reasoning_graph_edge`, `boundary_event`, `governance_ledger`) to partitioned Parquet with daily manifests, making the Type III boundary and multi‑agent coordination empirically observable.
+
+### Development Approach
+
+I designed the architecture and the **Type III secure reasoning** framework; Claude Code and ChatGPT helped draft and refactor the code. I review all changes, run the pipeline on AI safety feeds, inspect the generated briefs and telemetry, and iterate until it behaves as a working prototype.
+
+## If I Had More Time
+
+I would (1) finish the planned agents (source credibility, fact checking, performance monitoring), (2) add stronger AgentOps—telemetry dashboards, alerts, CI/CD, and deeper analysis of data quality, reasoning traces, and boundary events—and (3) partner with a pilot organization to run Type III on a real confidential corpus.

@@ -3,11 +3,11 @@
 ## Quick Start
 
 ```bash
-cd /home/mike/project/rkl/rkl.org
+cd /home/mike/project/rkl-consolidated/website
 ./dev-simple.sh
 ```
 
-Then open **http://localhost:1313** in your browser.
+Then open **http://localhost:1313** in your browser (via SSH port forwarding or direct access to the host running Hugo).
 
 ## The Workflow
 

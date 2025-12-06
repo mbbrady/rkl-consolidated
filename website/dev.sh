@@ -2,7 +2,7 @@
 # RKL Website Development Server
 # Uses rkl-web conda environment for Hugo + Browser-Sync
 
-cd /home/mike/project/rkl/rkl.org
+cd /home/mike/project/rkl-consolidated/website
 
 # Set conda environment paths
 CONDA_ENV="/opt/conda-envs/envs/rkl-web"

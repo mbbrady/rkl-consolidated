@@ -2,7 +2,7 @@
 # RKL Website Development Server - Simple Hugo LiveReload
 # Uses Hugo's native live reload without Browser-Sync
 
-cd /home/mike/project/rkl/rkl.org
+cd /home/mike/project/rkl-consolidated/website
 
 # Set conda environment paths
 CONDA_ENV="/opt/conda-envs/envs/rkl-web"
@@ -11,8 +11,6 @@ export PATH="$CONDA_ENV/bin:$PATH"
 # Kill any existing processes
 echo "🧹 Cleaning up old processes..."
 pkill -9 hugo 2>/dev/null
-pkill -9 browser-sync 2>/dev/null
-pkill -9 node 2>/dev/null
 sleep 1
 
 # Clean build artifacts

@@ -14,6 +14,53 @@
 
 <hr class="hero-divider my-5">
 
+{{/* Latest Research Briefs spotlight */}}
+{{ $pubBriefs := where .Site.RegularPages "Type" "pub-briefs" }}
+{{ $sortedBriefs := sort $pubBriefs "Date" "desc" }}
+{{ $latestBrief := index $sortedBriefs 0 }}
+{{ $dailyBriefs := where $pubBriefs ".Params.pub_brief_kind" "daily" }}
+{{ $latestDaily := index (sort $dailyBriefs "Date" "desc") 0 }}
+
+{{ if $latestBrief }}
+<section class="strip strip-grey fade-section">
+  <div class="container pt-6 pb-4 pb-md-6">
+    <div class="row">
+      <div class="col-12 col-lg-8">
+        <p class="eyebrow text-muted mb-2">Latest Research Brief</p>
+        <h2 class="mb-2">
+          <a href="{{ $latestBrief.RelPermalink }}">{{ $latestBrief.Title }}</a>
+        </h2>
+        <p class="text-muted mb-3">
+          {{ $latestBrief.Date.Format "January 2, 2006" }} · Secure reasoning, AI safety, and verifiable AI
+        </p>
+        {{ with $latestBrief.Params.description }}
+        <p>{{ . }}</p>
+        {{ end }}
+        <a class="button button-primary mt-2" href="{{ $latestBrief.RelPermalink }}">Read the latest brief</a>
+      </div>
+
+      {{ if and $latestDaily (ne $latestDaily.RelPermalink $latestBrief.RelPermalink) }}
+      <div class="col-12 col-lg-4 mt-4 mt-lg-0">
+        <div class="card p-3 h-100">
+          <p class="eyebrow text-muted mb-2">Today’s Daily Pub-Brief</p>
+          <h3 class="h5 mb-2">
+            <a href="{{ $latestDaily.RelPermalink }}">{{ $latestDaily.Title }}</a>
+          </h3>
+          <p class="text-muted mb-2">
+            {{ $latestDaily.Date.Format "January 2, 2006" }}
+          </p>
+          {{ with $latestDaily.Params.description }}
+          <p class="mb-2">{{ . }}</p>
+          {{ end }}
+          <a href="{{ $latestDaily.RelPermalink }}">Read today’s update →</a>
+        </div>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
 <!-- Lines of Effort Section -->
 {{ partial "lines-of-effort.html" . }}
 
